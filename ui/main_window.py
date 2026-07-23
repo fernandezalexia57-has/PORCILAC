@@ -72,7 +72,7 @@ def main_window(page: ft.Page):
                 ft.Divider(color = ft.Colors.PINK_700),
                 ft.ElevatedButton(
                     "Inicio",
-                    icon = ft.Icons.HOME,
+                    icon = ft.Icons.HOME_FILLED,
                     width = 180,
                     color = ft.Colors.BLACK,
                     style = ft.ButtonStyle(
@@ -82,7 +82,7 @@ def main_window(page: ft.Page):
                 ),
                 ft.ElevatedButton(
                     "Empleados",
-                    icon = ft.Icons.PEOPLE,
+                    icon = ft.Icons.PEOPLE_ALT_OUTLINED,
                     width = 180,
                     color = ft.Colors.BLACK,
                     style = ft.ButtonStyle(
@@ -92,7 +92,7 @@ def main_window(page: ft.Page):
                 ),
                 ft.ElevatedButton(
                     "🐷Cerdas",
-                    icon = "🐷",
+                    icon = "TAG_FACES",
                     width = 180,
                     color = ft.Colors.BLACK,
                     style = ft.ButtonStyle(
@@ -112,16 +112,6 @@ def main_window(page: ft.Page):
                 ),
                 ft.ElevatedButton(
                     "Partos",
-                    icon = ft.Icons.KEYBOARD_RETURN,
-                    width = 180,
-                    color = ft.Colors.BLACK,
-                    style = ft.ButtonStyle(
-                        shape = ft.RoundedRectangleBorder(radius = 2),
-                    ),
-                    on_click = mostrar_insertar_libro
-                ),
-                ft.ElevatedButton(
-                    "Destete",
                     icon = ft.Icons.CHILD_CARE,
                     width = 180,
                     color = ft.Colors.BLACK,
@@ -131,8 +121,18 @@ def main_window(page: ft.Page):
                     on_click = mostrar_insertar_libro
                 ),
                 ft.ElevatedButton(
+                    "Destete",
+                    icon = ft.Icons.OUTBOX,
+                    width = 180,
+                    color = ft.Colors.BLACK,
+                    style = ft.ButtonStyle(
+                        shape = ft.RoundedRectangleBorder(radius = 2),
+                    ),
+                    on_click = mostrar_insertar_libro
+                ),
+                ft.ElevatedButton(
                     "Reportes",
-                    icon = ft.Icons.INSIGHTS,
+                    icon = ft.Icons.ASSESSMENT_OUTLINED,
                     width = 180,
                     color = ft.Colors.BLACK,
                     style = ft.ButtonStyle(
