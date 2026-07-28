@@ -1,7 +1,9 @@
 import flet as ft
 
-#from ui.usuarios_form import libro_form
+#from ui.usuarios_from import libro_from
 #from ui.usuarios_table import libros_list
+
+
 
 def main_window(page: ft.Page):
     page.title = "Sistema de Gestion de Reproduccion de Cerdas"
@@ -45,11 +47,11 @@ def main_window(page: ft.Page):
             
     #Reacciona al click del botón de libros en el menú lateral
     def mostrar_insertar_libro(e=None):
-        contenido.content = libro_form(mostrar_inicio)
+        #contenido.content = libro_form(mostrar_inicio)
         page.update()
 
     def mostrar_lista_libros(e=None):
-        contenido.content = libros_list(mostrar_inicio)
+        #contenido.content = libros_list(mostrar_inicio)
         page.update()
 
     menu_lateral = ft.Container(
@@ -128,7 +130,7 @@ def main_window(page: ft.Page):
                     style = ft.ButtonStyle(
                         shape = ft.RoundedRectangleBorder(radius = 2),
                     ),
-                    on_click = mostrar_insertar_libro
+                    on_click = mostrar_inicio
                 ),
                 ft.ElevatedButton(
                     "Reportes",
@@ -157,3 +159,4 @@ def main_window(page: ft.Page):
     page.add(layout)
 
     mostrar_inicio()
+

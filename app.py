@@ -7,6 +7,7 @@ from models.usuario import Usuario
 from ui.main_window import main_window
 
 
+
 #USUARIOS
 
 def ver_usuarios():
@@ -119,3 +120,5 @@ ft.app(target = main_window)
 
 #if __name__ == "__main__":
 #     menu_usuarios()
+
+
