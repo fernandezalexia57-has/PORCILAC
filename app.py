@@ -121,4 +121,135 @@ ft.app(target = main_window)
 #if __name__ == "__main__":
 #     menu_usuarios()
 
+# ==========================================
+# DESTETES
+# ==========================================
 
+from dao.destete_dao import DesteteDAO
+from models.destete import Destete
+
+def ver_destetes():
+    try:    
+        destete_dao = DesteteDAO()
+        destetes = destete_dao.obtener_todos()
+
+        print("=== Destetes en la base de datos ===")
+
+        if len(destetes) == 0:
+            print("No hay destetes registrados.")
+        else:
+            for destete in destetes:
+                print("------------------------------------------------------------------------------------------------------------------------------------------------------------")
+                print(
+                    f"ID: {destete.id}\nNúmero de Arete: {destete.arete}\n"
+                    f"Fecha: {destete.fecha}\nNúmero de Lechones: {destete.numLechones}\n"
+                    f"Peso Promedio: {destete.pesoPromedio}"
+                )
+                print("------------------------------------------------------------------------------------------------------------------------------------------------------------")
+        print("\nConexion exitosa a la base de datos.")
+    except Exception as e:
+        print(f"Error: ")
+        print(e)
+
+def insertar_destete():
+    arete = input("Escribe el número de arete de la cerda: ")
+    fecha = input("Escribe la fecha de destete (AAAA/MM/DD): ")
+    numLechones = input("Escribe el número de lechones: ")
+    pesoPromedio = input("Escribe el peso promedio (kg): ")
+    try:
+        destete_dao = DesteteDAO()
+        id = destete_dao.obtener_ultimo_id() + 1
+        destete = Destete(id, arete, fecha, int(numLechones), float(pesoPromedio))
+        destete_dao.insertar(destete)
+        print("Insercion de destete realizada correctamente.")
+    except Exception as e:
+        print("Error al insertar un nuevo destete: ")
+        print(e)
+
+def actualizar_destete():
+    print("Selecciona el destete a actualizar")
+    try:
+        destete_dao = DesteteDAO()
+        ver_destetes()
+        id = int(input("Escribe el id del destete a actualizar: "))
+        arete = input("Escribe el nuevo número de arete: ")
+        fecha = input("Escribe la nueva fecha (AAAA/MM/DD): ")
+        numLechones = input("Escribe el nuevo número de lechones: ")
+        pesoPromedio = input("Escribe el nuevo peso promedio (kg): ")
+        
+        destete = Destete(id, arete, fecha, int(numLechones), float(pesoPromedio))
+        destete_dao.actualizar(destete)
+        print(f'El destete con ID {id} ha sido actualizado correctamente')
+    except Exception as e:
+            print("Error al actualizar el destete")
+            print(e)
+
+def menu_destetes():
+    print("1. Ver todos los destetes")
+    print("2. Insertar un nuevo destete")
+    print("3. Actualizar un destete")
+    opcion = int(input("Selecciona una opcion (1-3): "))
+
+    match opcion:
+        case 1:
+            ver_destetes()
+        case 2:
+            insertar_destete()
+        case 3:
+            actualizar_destete()
+        
+
+# ==========================================
+# REPORTES
+# ==========================================
+
+from dao.destete_dao import DesteteDAO
+# Si tienes algún reporteador o DAO de reportes, puedes importarlo aquí también
+# from dao.reporte_dao import ReporteDAO 
+
+def generar_reporte_destetes():
+    try:
+        destete_dao = DesteteDAO()
+        destetes = destete_dao.obtener_todos()
+
+        print("=== REPORTE GENERAL DE DESTETES ===")
+        if len(destetes) == 0:
+            print("No hay datos suficientes para generar el reporte.")
+        else:
+            total_lechones = 0
+            peso_total = 0
+            
+            for destete in destetes:
+                total_lechones += destete.numLechones
+                peso_total += destete.pesoPromedio
+                print(
+                    f"ID: {destete.id} | Arete: {destete.arete} | "
+                    f"Fecha: {destete.fecha} | Lechones: {destete.numLechones} | "
+                    f"Peso Promedio: {destete.pesoPromedio} kg"
+                )
+            
+            promedio_general = peso_total / len(destetes) if len(destetes) > 0 else 0
+            print("--------------------------------------------------")
+            print(f"Total de registros: {len(destetes)}")
+            print(f"Suma total de lechones destetados: {total_lechones}")
+            print(f"Promedio general de peso: {promedio_general:.2f} kg")
+            
+        print("\nReporte generado con éxito.")
+    except Exception as e:
+        print("Error al generar el reporte de destetes:")
+        print(e)
+
+def menu_reportes():
+    print("=== MENÚ DE REPORTES ===" )
+    print("1. Reporte general de destetes")
+    print("2. Regresar")
+    opcion = int(input("Selecciona una opción (1-2): "))
+
+    match opcion:
+        case 1:
+            generar_reporte_destetes()
+        case 2:
+            print("Regresando...")
+        case _:
+            print("Opción no válida.")
+            

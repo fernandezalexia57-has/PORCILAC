@@ -1,11 +1,23 @@
 import flet as ft
+from dao.destete_dao import DesteteDAO
+from dao.reportes_dao import ReportesDAO
 
 def reportes_form(regresar):
+    
+    # --- CONSULTAR DATOS REALES DE LA BASE DE DATOS ---
+    total_lechones_real = "0"
+    try:
+        destete_dao = DesteteDAO()
+        destetes = destete_dao.obtener_todos()
+        total_lechones_real = str(sum(d.numLechones for d in destetes))
+    except Exception as e:
+        print("Error al obtener los destetes para el reporte:", e)
+
     # Campos de fecha para el reporte
     fecha_inicio_input = ft.TextField(
         label="Fecha de inicio",
         hint_text="AAAA/MM/DD",
-        width=250,
+        width=280,
         read_only=True
     )
 
@@ -19,7 +31,7 @@ def reportes_form(regresar):
     fecha_termino_input = ft.TextField(
         label="Fecha de término",
         hint_text="AAAA/MM/DD",
-        width=250,
+        width=280,
         read_only=True
     )
 
@@ -32,7 +44,7 @@ def reportes_form(regresar):
 
     tipo_reporte_dropdown = ft.Dropdown(
         label="Tipo de reporte",
-        width=250,
+        width=280,
         options=[
             ft.dropdown.Option("Mensual"),
             ft.dropdown.Option("Semanal"),
@@ -52,44 +64,88 @@ def reportes_form(regresar):
             mensaje_reporte.value = "Seleccione las fechas de inicio y término"
             mensaje_reporte.color = ft.Colors.RED
         else:
-            mensaje_reporte.value = f"Reporte '{tipo}' generado exitosamente del {f_inicio} al {f_termino}"
-            mensaje_reporte.color = ft.Colors.GREEN
+            try:
+                reporte_dao = ReportesDAO()
+                exito = reporte_dao.insertar(
+                    tipo=tipo, 
+                    fecha_inicio=f_inicio, 
+                    fecha_termino=f_termino, 
+                    cerdas_prenadas=20, 
+                    partos_mes=8, 
+                    lechones_destetados=int(total_lechones_real), 
+                    mortalidad=2.1
+                )
+                
+                if exito:
+                    mensaje_reporte.value = f"Reporte '{tipo}' generado y guardado en la BD"
+                    mensaje_reporte.color = ft.Colors.GREEN
+                else:
+                    mensaje_reporte.value = "Error al guardar el reporte en la base de datos"
+                    mensaje_reporte.color = ft.Colors.RED
+            except Exception as err:
+                print("Error detallado al generar reporte:", err)
+                mensaje_reporte.value = "Ocurrió un error inesperado al guardar"
+                mensaje_reporte.color = ft.Colors.RED
+                
         e.page.update()
 
-    # Tarjetas de Estadísticas Superiores
-    def crear_tarjeta(titulo, valor, color_texto, icono_color):
-        return ft.Container(
-            width=210,
-            padding=15,
-            bgcolor=ft.Colors.WHITE,
-            border_radius=10,
-            content=ft.Column(
-                controls=[
-                    ft.Text(titulo, size=14, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
-                    ft.Row(
-                        controls=[
-                            ft.Icon(ft.Icons.PETS, color=icono_color, size=30),
-                            ft.Text(valor, size=24, color=color_texto, weight=ft.FontWeight.BOLD)
-                        ],
-                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-                    )
-                ],
-                spacing=10
-            )
-        )
+    # --- TARJETAS SUPERIORES ---
+    tarjeta_preñadas = ft.Container(
+        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
+        content=ft.Column(controls=[
+            ft.Text("Cerdas preñadas", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
+            ft.Row(controls=[
+                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.PINK_400, size=28),
+                ft.Text("20", size=22, color=ft.Colors.PINK_400, weight=ft.FontWeight.BOLD)
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
+        ], spacing=5)
+    )
 
-    tarjeta_preñadas = crear_tarjeta("Cerdas preñadas", "20", "#E85A8E", ft.Colors.PINK_300)
-    tarjeta_partos = crear_tarjeta("Partos este mes", "8", "#3B82F6", ft.Colors.BLUE_300)
-    tarjeta_destetados = crear_tarjeta("Lechones destetados", "78", "#10B981", ft.Colors.GREEN_300)
-    tarjeta_mortalidad = crear_tarjeta("Mortalidad (%)", "2.1%", "#EF4444", ft.Colors.RED_300)
+    tarjeta_partos = ft.Container(
+        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
+        content=ft.Column(controls=[
+            ft.Text("Partos este mes", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
+            ft.Row(controls=[
+                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.BLUE_600, size=28),
+                ft.Text("8", size=22, color=ft.Colors.BLUE_600, weight=ft.FontWeight.BOLD)
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
+        ], spacing=5)
+    )
 
-    # Gráfica simulada con barras de Flet (Nacidos vivos vs Destetados)
+    tarjeta_destetados = ft.Container(
+        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
+        content=ft.Column(controls=[
+            ft.Text("Lechones destetados", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
+            ft.Row(controls=[
+                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.GREEN_600, size=28),
+                ft.Text(total_lechones_real, size=22, color=ft.Colors.GREEN_600, weight=ft.FontWeight.BOLD)
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
+        ], spacing=5)
+    )
+
+    tarjeta_mortalidad = ft.Container(
+        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
+        content=ft.Column(controls=[
+            ft.Text("Mortalidad (%)", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
+            ft.Row(controls=[
+                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.RED_700, size=28),
+                ft.Text("2.1%", size=22, color=ft.Colors.RED_700, weight=ft.FontWeight.BOLD)
+            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
+        ], spacing=5)
+    )
+
+    # Gráfica simulada con barras de Flet
     grafica_container = ft.Container(
-        width=450,
-        height=320,
+        width=480,
+        height=330,
         padding=20,
         bgcolor=ft.Colors.WHITE,
         border_radius=10,
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
         content=ft.Column(
             controls=[
                 ft.Text("Nacidos vivos vs Destetados", size=16, weight=ft.FontWeight.BOLD),
@@ -119,6 +175,23 @@ def reportes_form(regresar):
         )
     )
 
+    # Botones de Exportar e Imprimir
+    btn_exportar = ft.ElevatedButton(
+        "Exportar", 
+        icon=ft.Icons.DOWNLOAD, 
+        bgcolor=ft.Colors.GREEN_700, 
+        color=ft.Colors.WHITE,
+        width=134
+    )
+    
+    btn_imprimir = ft.ElevatedButton(
+        "Imprimir", 
+        icon=ft.Icons.PRINT, 
+        bgcolor=ft.Colors.GREEN_700, 
+        color=ft.Colors.WHITE,
+        width=134
+    )
+
     return ft.Container(
         padding=30,
         expand=True,
@@ -132,7 +205,7 @@ def reportes_form(regresar):
                 ft.Row(
                     controls=[tarjeta_preñadas, tarjeta_partos, tarjeta_destetados, tarjeta_mortalidad],
                     spacing=15,
-                    wrap=True
+                    wrap=False
                 ),
                 
                 ft.Divider(height=15, color=ft.Colors.TRANSPARENT),
@@ -146,6 +219,7 @@ def reportes_form(regresar):
                             padding=20,
                             bgcolor=ft.Colors.WHITE,
                             border_radius=10,
+                            shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
                             content=ft.Column(
                                 controls=[
                                     tipo_reporte_dropdown,
@@ -157,19 +231,17 @@ def reportes_form(regresar):
                                     date_picker_termino,
                                     ft.ElevatedButton(
                                         "Generar reporte",
-                                        icon=ft.Icons.PIE_CHART,
+                                        icon=ft.Icons.BAR_CHART,
                                         bgcolor="#E85A8E",
                                         color=ft.Colors.WHITE,
-                                        width=250,
+                                        width=280,
                                         on_click=generar_reporte
                                     ),
                                     mensaje_reporte,
                                     ft.Row(
-                                        controls=[
-                                            ft.ElevatedButton("Exportar", icon=ft.Icons.DOWNLOAD, bgcolor=ft.Colors.GREEN_700, color=ft.Colors.WHITE),
-                                            ft.ElevatedButton("Imprimir", icon=ft.Icons.PRINT, bgcolor=ft.Colors.GREEN_600, color=ft.Colors.WHITE),
-                                        ],
-                                        spacing=10
+                                        controls=[btn_exportar, btn_imprimir],
+                                        spacing=12,
+                                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
                                     )
                                 ],
                                 spacing=12
