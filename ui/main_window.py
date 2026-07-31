@@ -1,7 +1,13 @@
 import flet as ft
 
-
+from ui.destete_list import destete_list
+from ui.parto_list import parto_list
+from ui.servicio_list import servicio_list
 from ui.cerda_from import cerda_form
+from ui.parto_from import parto_form
+from ui.servicio_from import servicio_form
+from ui.destete_from import destete_form
+
 
 def main_window(page: ft.Page):
     page.title = "Sistema de Gestion de Reproduccion de Cerdas"
@@ -38,19 +44,213 @@ def main_window(page: ft.Page):
         ],
         spacing= 10
     )
+    def editar_parto(parto):
 
+     print(
+        "Editando parto:",
+        parto.id_parto
+    )
+    
     def mostrar_inicio(e=None):
         contenido.content = inicio()
         page.update()
             
+  
+
+    page.update()
     #Reacciona al click del botón de libros en el menú lateral
     def mostrar_insertar_cerda(e=None):
         contenido.content = cerda_form(mostrar_inicio)
         page.update()
 
-   # def mostrar_lista_libros(e=None):
-        #contenido.content = libros_list(mostrar_inicio)
-        #page.update()
+
+    def mostrar_insertar_parto(e=None):
+
+     contenido.content = parto_form(
+        regresar_partos
+    )
+
+    page.update()
+
+    page.update()
+    
+    def mostrar_lista_partos(e=None):
+
+     contenido.content = parto_list(
+        mostrar_insertar_parto,
+        editar_parto
+    )
+
+    page.update()
+            
+    def regresar_partos():
+
+     contenido.content = parto_list(
+        mostrar_insertar_parto,
+        editar_parto
+    )
+
+    page.update()
+
+    def editar_parto(parto):
+
+     contenido.content = parto_form(
+        regresar_partos,
+        parto
+    )
+
+    page.update()
+    
+
+    page.update()
+
+    page.update()
+    
+    
+    def mostrar_insertar_servicio(e=None):
+    
+        contenido.content = servicio_form(
+         regresar_servicios
+        )
+    
+        page.update()
+    
+        page.update()
+        
+    def mostrar_lista_servicios(e=None):
+    
+         contenido.content = servicio_list(
+            mostrar_insertar_servicio,
+            editar_servicio
+        )
+    
+         page.update()
+                
+    def regresar_servicios(mensaje=None):
+
+        contenido.content = servicio_list(
+        mostrar_insertar_servicio,
+        editar_servicio
+        )
+
+        if mensaje:
+            page.show_dialog(
+            ft.SnackBar(
+                content=ft.Text(mensaje),
+                bgcolor=ft.Colors.GREEN,
+            )
+        )
+
+        page.update()
+    
+    def editar_servicio(servicio):
+    
+         contenido.content = servicio_form(
+            regresar_servicios,
+            servicio
+    )
+    
+    page.update() 
+    
+    
+    def mostrar_insertar_parto(e=None):
+
+     contenido.content = parto_form(
+        regresar_partos
+    )
+
+    page.update()
+
+    page.update()
+    
+    def mostrar_lista_partos(e=None):
+
+     contenido.content = parto_list(
+        mostrar_insertar_parto,
+        editar_parto
+    )
+
+    page.update()
+            
+    def regresar_partos(mensaje=None):
+    
+            contenido.content = parto_list(
+            mostrar_insertar_parto,
+            editar_parto
+            )
+    
+            if mensaje:
+                page.show_dialog(
+                ft.SnackBar(
+                    content=ft.Text(mensaje),
+                    bgcolor=ft.Colors.GREEN,
+                )
+            )
+    
+            page.update()
+
+    def editar_parto(parto):
+
+     contenido.content = parto_form(
+        regresar_partos,
+        parto
+    )
+
+    page.update()
+    
+
+    page.update()
+
+    page.update()
+    
+    
+    def mostrar_insertar_destete(e=None):
+    
+        contenido.content = destete_form(
+         regresar_destetes
+    )
+    
+    page.update()
+    
+    page.update()
+        
+    def mostrar_lista_destetes(e=None):
+    
+         contenido.content = destete_list(
+            mostrar_insertar_destete,
+            editar_destete
+    )
+    
+    page.update()
+                
+    def regresar_destetes(mensaje=None):
+    
+            contenido.content = destete_list(
+            mostrar_insertar_destete,
+            editar_destete
+            )
+    
+            if mensaje:
+                page.show_dialog(
+                ft.SnackBar(
+                    content=ft.Text(mensaje),
+                    bgcolor=ft.Colors.GREEN,
+                )
+            )
+    
+            page.update()
+    
+    def editar_destete(destete):
+    
+         contenido.content = destete_form(
+            regresar_destetes,
+            destete
+    )
+    
+    page.update() 
+    
+    
+    
 
     menu_lateral = ft.Container(
         width = 220,
@@ -101,13 +301,14 @@ def main_window(page: ft.Page):
                     on_click = mostrar_insertar_cerda
                 ),
                 ft.ElevatedButton(
-                    "Reprodcción",
+                    "Reproducción",
                     icon = ft.Icons.SWAP_HORIZ,
                     width = 180,
                     color = ft.Colors.BLACK,
                     style = ft.ButtonStyle(
                         shape = ft.RoundedRectangleBorder(radius = 2),
                     ),
+                     on_click = mostrar_lista_servicios
                    
                 ),
                 ft.ElevatedButton(
@@ -118,7 +319,7 @@ def main_window(page: ft.Page):
                     style = ft.ButtonStyle(
                         shape = ft.RoundedRectangleBorder(radius = 2),
                     ),
-                 
+                    on_click = mostrar_lista_partos
                 ),
                 ft.ElevatedButton(
                     "Destete",
@@ -128,6 +329,7 @@ def main_window(page: ft.Page):
                     style = ft.ButtonStyle(
                         shape = ft.RoundedRectangleBorder(radius = 2),
                     ),
+                    on_click = mostrar_lista_destetes
                  
                 ),
                 ft.ElevatedButton(
@@ -138,6 +340,7 @@ def main_window(page: ft.Page):
                     style = ft.ButtonStyle(
                         shape = ft.RoundedRectangleBorder(radius = 2),
                     ),
+                    
                 
                 )                
             ],

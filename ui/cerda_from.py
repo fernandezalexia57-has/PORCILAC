@@ -74,7 +74,7 @@ def cerda_form(regresar):
      options=[
         ft.dropdown.Option("Celo"),
         ft.dropdown.Option("Gestante"),
-        ft.dropdown.Option("Lactancia"),
+        ft.dropdown.Option("Lactante"),
         ft.dropdown.Option("Vacía")
      ]
     )
