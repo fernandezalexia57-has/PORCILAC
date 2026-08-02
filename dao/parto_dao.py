@@ -162,3 +162,131 @@ class PartoDAO:
         conexion.close()
 
         return resultado[0]
+    
+    # ==========================
+    # TOTAL DE PARTOS
+    # ==========================
+    def total_partos(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT COUNT(*)
+        FROM partos
+        WHERE id_cerda = %s
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexion.close()
+
+        return total
+
+
+    # ==========================
+    # TOTAL LECHONES VIVOS
+    # ==========================
+    def total_lechones_vivos(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT COALESCE(SUM(lechones_v),0)
+        FROM partos
+        WHERE id_cerda = %s
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexion.close()
+
+        return total
+
+
+    # ==========================
+    # TOTAL LECHONES MUERTOS
+    # ==========================
+    def total_lechones_muertos(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT COALESCE(SUM(lechones_m),0)
+        FROM partos
+        WHERE id_cerda = %s
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexion.close()
+
+        return total
+
+
+    # ==========================
+    # ÚLTIMO PARTO
+    # ==========================
+    def ultimo_parto(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT fecha
+        FROM partos
+        WHERE id_cerda = %s
+        ORDER BY fecha DESC
+        LIMIT 1
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        resultado = cursor.fetchone()
+
+        cursor.close()
+        conexion.close()
+
+        if resultado:
+            return resultado[0]
+
+        return None
+    
+    # ==========================
+    # LECHONES VIVOS DEL ÚLTIMO PARTO
+    # ==========================
+    def ultimo_lechones_vivos(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT lechones_v
+        FROM partos
+        WHERE id_cerda = %s
+        ORDER BY fecha DESC
+        LIMIT 1
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        resultado = cursor.fetchone()
+
+        cursor.close()
+        conexion.close()
+
+        if resultado:
+            return resultado[0]
+
+        return 0

@@ -154,3 +154,79 @@ class DesteteDAO:
         conexion.close()
 
         return resultado[0]
+    
+    # ==========================
+    # TOTAL DE DESTETES
+    # ==========================
+    def total_destetes(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT COUNT(*)
+        FROM destetes
+        WHERE id_cerda = %s
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexion.close()
+
+        return total
+
+
+    # ==========================
+    # TOTAL LECHONES DESTETADOS
+    # ==========================
+    def total_lechones_destetados(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT COALESCE(SUM(numle),0)
+        FROM destetes
+        WHERE id_cerda = %s
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexion.close()
+
+        return total
+
+
+    # ==========================
+    # ÚLTIMO DESTETE
+    # ==========================
+    def ultimo_destete(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT fecha_d
+        FROM destetes
+        WHERE id_cerda = %s
+        ORDER BY fecha_d DESC
+        LIMIT 1
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        resultado = cursor.fetchone()
+
+        cursor.close()
+        conexion.close()
+
+        if resultado:
+            return resultado[0]
+
+        return None

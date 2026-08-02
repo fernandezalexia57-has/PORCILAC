@@ -122,7 +122,7 @@ class ServicioDAO:
         cursor = conexion.cursor()
 
         cursor.execute(
-            "DELETE FROM partos WHERE id_servicio = %s",
+            "DELETE FROM servicios WHERE id_servicio = %s",
             (id_servicio,)
         )
 
@@ -149,3 +149,56 @@ class ServicioDAO:
         conexion.close()
 
         return resultado[0]
+
+
+ # ==========================
+    # TOTAL DE SERVICIOS
+    # ==========================
+    def total_servicios(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT COUNT(*)
+        FROM servicios
+        WHERE id_cerda = %s
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        total = cursor.fetchone()[0]
+
+        cursor.close()
+        conexion.close()
+
+        return total
+
+
+    # ==========================
+    # ÚLTIMO SERVICIO
+    # ==========================
+    def ultimo_servicio(self, id_cerda):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        SELECT fecha_s
+        FROM servicios
+        WHERE id_cerda = %s
+        ORDER BY fecha_s DESC
+        LIMIT 1
+        """
+
+        cursor.execute(sql, (id_cerda,))
+
+        resultado = cursor.fetchone()
+
+        cursor.close()
+        conexion.close()
+
+        if resultado:
+            return resultado[0]
+
+        return None

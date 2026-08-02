@@ -1,23 +1,29 @@
+
+
+
+from tkinter import dialog
+
 import flet as ft
 
-from dao.destete_dao import DesteteDAO
+from dao.cerda_dao import CerdaDAO
 
 
 
-def destete_list(nuevo_destete, editar_destete):
+def cerda_list(nuevo_cerda, editar_cerda, ver_detalles):
 
 
-    destete_dao = DesteteDAO()
-
-
-
+    cerda_dao = CerdaDAO()
+   
+    
+    
+    
     # ==========================
     # DATOS
     # ==========================
 
-    todos_destetes = destete_dao.obtener_todos()
+    todos_cerdas = cerda_dao.obtener_todos()
 
-    destetes_filtrados = todos_destetes.copy()
+    cerdas_filtrados = todos_cerdas.copy()
 
 
     pagina_actual = {
@@ -25,37 +31,54 @@ def destete_list(nuevo_destete, editar_destete):
     }
 
 
-    por_pagina = 3
+    por_pagina = 2
+
+
 
     # ==========================
     # TARJETA PARTO
     # ==========================
 
-    def crear_tarjeta(destete, editar_destete):
+    def crear_tarjeta(cerda, editar_cerda):
+        # ==========================
+        # COLOR SEGÚN ESTADO
+        # ==========================
+
+        colores_estado = {
+        "Celo": "#C08552",
+        "Gestante": "#5CB87A",
+        "Lactante": "#E8618C",
+        "Vacía": "#5C8DB8",
+         "Baja": "#9E9E9E"
+        }
+
+        color_estado = colores_estado.get(cerda.estado, "#D9D9D9")
+        
+        
 
         return ft.Container(
 
             width=300,
+
             height=220,
 
-            padding=10,
+             padding=10,
 
-            bgcolor="white",
+             bgcolor="white",
 
-            border_radius=12,
+             border_radius=12,
+             
+             shadow=ft.BoxShadow(
+             
+                    blur_radius=10,
+             
+                    color="#D9D9D9",
+             
+                    offset=ft.Offset(0,3)
+             
+                     ),
 
-
-            shadow=ft.BoxShadow(
-
-                blur_radius=10,
-
-                color="#D9D9D9",
-
-                offset=ft.Offset(0,3)
-
-            ),
             
-
 
             content=ft.Column(
 
@@ -67,76 +90,136 @@ def destete_list(nuevo_destete, editar_destete):
 
 
                     ft.Text(
-                        f"ID de destete: {destete.id_destete}",
+                        f"ID cerda: {cerda.id}",
                         size=14
                     ),
 
 
                     ft.Text(
-                        f"Num. Arete de la cerda: {destete.arete}",
+                        f"Num. Arete: {cerda.arete}",
                         size=14
                     ),
-
-
-                    ft.Text(
-                        f"Fecha de destete: {destete.fecha_d}",
-                        size=14
-                    ),
-
-
-                    ft.Text(
-                        f"Num. de lechones destetados: {destete.numle}",
-                        size=14
-                    ),
-
-
-                
+                    
                     
                     ft.Text(
-                         f"Peso promedio: {destete.peso}",
-                          size=14
+                        f"Raza: {cerda.raza}",
+                        size=14
                     ),
-
-
-
+                    
+                    
+                    ft.Text(
+                        f"Color: {cerda.color}",
+                        size=14
+                    ),
+                    
+                    
+                         ft.Text(
+                        f"Edad: {cerda.edad} años",
+                        size=14
+                    ),
+                    
                     ft.Row(
-
-                        alignment=
-                         ft.MainAxisAlignment.CENTER,
-
-                        spacing=10,
-
+                        
                         controls=[
 
-
-                     ft.ElevatedButton(
-
-                     "Editar",
-
-                        icon=ft.Icons.EDIT,
-
-
-                        style=ft.ButtonStyle(
-
-                       bgcolor="#55B87A",
-
-                          color="white",
-
-                         shape=
-                         ft.RoundedRectangleBorder(
-                          radius=20
-                         )
-
+                        ft.Text(
+                      "Estado reproductivo:",
+                         size=14
                          ),
 
-                         on_click=lambda e:
-                         editar_destete(destete)
+                        ft.Container(
+                            padding=10,
+                             bgcolor=color_estado,
+                            border_radius=20,
+                            content=ft.Text(
+                            cerda.estado,
+                            color=ft.Colors.WHITE,
+                             weight=ft.FontWeight.BOLD,
+                             size=12,
+                            ),
+                            )
 
+                            ]
                         ),
 
 
+                    ft.Text(
+                        f"Fecha de registro: {cerda.fecha}",
+                        size=14
+                    ),
 
 
+
+
+                  
+                    ft.Row(
+                        
+                        alignment=
+                        ft.MainAxisAlignment.CENTER,
+                        
+
+                        controls=[
+                            
+                            
+                            ft.ElevatedButton(
+                                "Ver historial",
+                                icon=ft.Icons.VISIBILITY,
+                                bgcolor="#5C8DB8",
+                                color="white",
+                                on_click=lambda e: ver_detalles(cerda)
+                            ),
+                             
+
+
+
+                            ft.ElevatedButton(
+
+                                "Editar",
+
+                                icon=ft.Icons.EDIT,
+                                disabled=(cerda.estado == "Baja"),
+
+
+                                style=ft.ButtonStyle(
+
+                                    bgcolor="#55B87A",
+
+                                    color="white",
+
+
+                                    shape=
+                                    ft.RoundedRectangleBorder(
+                                        radius=20
+                                    )
+
+                                ),
+                                 on_click=lambda e: editar_cerda(cerda)
+                                 
+                            ),
+                            
+                             
+                                 
+                            ft.ElevatedButton(
+                                "Dar de baja",
+                                
+                                disabled=(cerda.estado == "Baja"),
+                                
+                                style=ft.ButtonStyle(
+
+                                    bgcolor="#E8618C",
+
+                                    color="white",
+
+
+                                    shape=
+                                    ft.RoundedRectangleBorder(
+                                        radius=20
+                                    )
+
+                                   ),
+                                     on_click=lambda e, cerda_id=cerda.id:
+                                    confirmar_baja(e, cerda_id)
+                                )
 
                         ]
 
@@ -159,15 +242,15 @@ def destete_list(nuevo_destete, editar_destete):
 
     expand=True,
 
-    runs_count=3,          # cantidad de tarjetas por fila
+    runs_count=2,          # cantidad de tarjetas por fila
 
-    max_extent=350,        # ancho máximo de cada tarjeta
+    max_extent=500,        # ancho máximo de cada tarjeta
 
     spacing=35,            # separación horizontal
 
     run_spacing=35,        # separación vertical
 
-    child_aspect_ratio=0.90
+    child_aspect_ratio=1.41
 
 )
     contenedor_tarjetas = ft.Container(
@@ -177,9 +260,84 @@ def destete_list(nuevo_destete, editar_destete):
     content=lista_tarjetas,
 
      )
+    
+    # ==========================
+    # DAR DE BAJA CERDA
+    # ==========================
+    def confirmar_baja(e, id):
+
+        def aceptar(ev):
+
+            cerda_dao.dar_baja(id)
+
+            dialog.open = False
+            
+            mensaje = ft.SnackBar(
+             content=ft.Text(
+            "Cerda dada de baja correctamente"
+             )
+            )
+
+            e.page.overlay.append(mensaje)
+
+            mensaje.open = True
+            e.page.update()
+
+            todos_cerdas.clear()
+            todos_cerdas.extend(
+            cerda_dao.obtener_todos()
+            )
+
+            cerdas_filtrados.clear()
+            cerdas_filtrados.extend(
+            todos_cerdas
+            )
+
+            cargar_tarjetas()
+            cargar_paginacion()
+
+            lista_tarjetas.update()
 
 
-     # ==========================
+        def cancelar(ev):
+
+            dialog.open = False
+            e.page.update()
+
+
+        dialog = ft.AlertDialog(
+
+            title=ft.Text(
+            "Dar de baja cerda"
+            ),
+
+         content=ft.Text(
+            "¿Está seguro que desea dar de baja esta cerda?"
+         ),
+
+         actions=[
+
+            ft.TextButton(
+                "Cancelar",
+                on_click=cancelar
+            ),
+
+            ft.TextButton(
+                "Aceptar",
+                on_click=aceptar
+            )
+
+        ]
+    )
+
+
+        e.page.overlay.append(dialog)
+
+        dialog.open = True
+
+        e.page.update()
+
+    # ==========================
     # PAGINACION
     # ==========================
 
@@ -199,7 +357,7 @@ def destete_list(nuevo_destete, editar_destete):
         return max(
             1,
             (
-                len(destetes_filtrados)
+                len(cerdas_filtrados)
                 +
                 por_pagina
                 -
@@ -232,14 +390,14 @@ def destete_list(nuevo_destete, editar_destete):
 
 
 
-        for destete in destetes_filtrados[inicio:fin]:
+        for cerda in cerdas_filtrados[inicio:fin]:
 
 
             lista_tarjetas.controls.append(
 
                 crear_tarjeta(
-                    destete,
-                    editar_destete
+                    cerda,
+                    editar_cerda
                 )
 
             )
@@ -477,6 +635,8 @@ def destete_list(nuevo_destete, editar_destete):
 
 
 
+
+
     # ==========================
     # BUSCADOR
     # ==========================
@@ -485,7 +645,7 @@ def destete_list(nuevo_destete, editar_destete):
     buscador = ft.TextField(
 
         hint_text=
-        "Buscar destete(ID, Arete)",
+        "Buscar cerda(ID, Núm. Arete)",
 
         width=370,
         height= 48,
@@ -511,13 +671,11 @@ def destete_list(nuevo_destete, editar_destete):
 
 
             ft.dropdown.Option(
-                "Fecha de parto"
+                "Fecha de registro"
             ),
 
 
-            ft.dropdown.Option(
-                "Num. de lechones"
-            )
+            
 
 
         ]
@@ -535,17 +693,17 @@ def destete_list(nuevo_destete, editar_destete):
         )
 
 
-        destetes_filtrados.clear()
+        cerdas_filtrados.clear()
 
 
 
-        for p in todos_destetes:
+        for p in todos_cerdas:
 
 
             if (
 
                 texto in str(
-                    p.id_destete
+                    p.id
                 )
 
 
@@ -555,19 +713,17 @@ def destete_list(nuevo_destete, editar_destete):
 
 
                 or texto in str(
-                    p.fecha_d
+                    p.fecha
                 ).lower()
 
 
-                or texto in str(
-                    p.numle
-                )
+               
 
 
             ):
 
 
-                destetes_filtrados.append(p)
+                cerdas_filtrados.append(p)
 
 
 
@@ -588,6 +744,7 @@ def destete_list(nuevo_destete, editar_destete):
 
 
 
+
     # ==========================
     # VISTA FINAL
     # ==========================
@@ -605,6 +762,8 @@ def destete_list(nuevo_destete, editar_destete):
         content=ft.Column(
 
             spacing=20,
+            expand=True,
+            
 
 
             controls=[
@@ -622,7 +781,7 @@ def destete_list(nuevo_destete, editar_destete):
 
                         ft.Text(
 
-                            "Destete",
+                            "Cerdas",
 
                             size=32,
 
@@ -657,7 +816,7 @@ def destete_list(nuevo_destete, editar_destete):
 
                         ft.ElevatedButton(
 
-                            "+ Nuevo destete",
+                            "+ Nueva cerda",
                                height=48,
 
 
@@ -668,7 +827,7 @@ def destete_list(nuevo_destete, editar_destete):
 
                             on_click=
                             lambda e:
-                            nuevo_destete()
+                            nuevo_cerda()
 
                         )
 
@@ -685,25 +844,24 @@ def destete_list(nuevo_destete, editar_destete):
 
 
 
-            ft.Container(
+                 ft.Container(
+                
+                
+                    content=lista_tarjetas
+                
+                 ),
 
 
-                content=lista_tarjetas
 
-            ),
-
-
-
-
-            ft.Container(
-
-                height=60,
-
-                content=paginacion,
-
-                alignment=ft.Alignment(0,0)
-
-            )
+                 ft.Container(
+                
+                    height=60,
+                
+                    content=paginacion,
+                
+                    alignment=ft.Alignment(0,0)
+                
+                 )
 
 
 

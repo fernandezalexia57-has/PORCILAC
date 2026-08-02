@@ -4,9 +4,11 @@ from ui.destete_list import destete_list
 from ui.parto_list import parto_list
 from ui.servicio_list import servicio_list
 from ui.cerda_from import cerda_form
+from ui.cerda_list import cerda_list
 from ui.parto_from import parto_form
 from ui.servicio_from import servicio_form
 from ui.destete_from import destete_form
+from ui.cerda_detalles import cerda_detalles
 
 
 def main_window(page: ft.Page):
@@ -60,8 +62,69 @@ def main_window(page: ft.Page):
     page.update()
     #Reacciona al click del botón de libros en el menú lateral
     def mostrar_insertar_cerda(e=None):
-        contenido.content = cerda_form(mostrar_inicio)
-        page.update()
+
+     contenido.content = cerda_form(
+        regresar_cerdas
+    )
+
+    page.update()
+
+    page.update()
+    
+    def mostrar_lista_cerdas(e=None):
+
+     contenido.content = cerda_list(
+        mostrar_insertar_cerda,
+        editar_cerda,
+        ver_detalles
+        
+    )
+
+    page.update()
+    
+    def ver_detalles(cerda):
+
+        contenido.content = cerda_detalles(
+        cerda,
+        regresar_cerdas
+    )
+
+    page.update()
+            
+    def regresar_cerdas(mensaje=None):
+    
+            contenido.content = cerda_list(
+            mostrar_insertar_cerda,
+            editar_cerda,
+            ver_detalles
+            )
+    
+            if mensaje:
+                page.show_dialog(
+                ft.SnackBar(
+                    content=ft.Text(mensaje),
+                    bgcolor=ft.Colors.GREEN,
+                )
+            )
+    
+            page.update()
+
+    page.update()
+
+    def editar_cerda(cerda):
+
+     contenido.content = cerda_form(
+        regresar_cerdas,
+        cerda
+    )
+
+    page.update()
+    
+
+    page.update()
+
+    page.update()
+    
 
 
     def mostrar_insertar_parto(e=None):
@@ -298,7 +361,7 @@ def main_window(page: ft.Page):
                     style = ft.ButtonStyle(
                         shape = ft.RoundedRectangleBorder(radius = 2),
                     ),
-                    on_click = mostrar_insertar_cerda
+                    on_click = mostrar_lista_cerdas
                 ),
                 ft.ElevatedButton(
                     "Reproducción",

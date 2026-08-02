@@ -4,8 +4,8 @@ import flet as ft
 from models.servicio import Servicio
 from dao.servicio_dao import ServicioDAO
 from dao.cerda_dao import CerdaDAO
-
-
+from dao.destete_dao import DesteteDAO
+from datetime import datetime, timedelta
 
 def servicio_form(regresar, servicio=None):
 
@@ -179,6 +179,47 @@ def servicio_form(regresar, servicio=None):
             e.page.update()
 
             return
+        
+        
+                # ==========================
+        # VALIDAR FECHA DE SERVICIO
+        # ==========================
+
+        cerda_id = int(cerda_input.value)
+
+        destete_dao = DesteteDAO()
+
+        fecha_destete = destete_dao.ultimo_destete(cerda_id)
+
+        # Convertir la fecha del formulario
+        fecha_servicio = datetime.strptime(
+            fecha_input.value,
+            "%Y/%m/%d"
+        ).date()
+
+        # Si la cerda ya tiene destetes registrados
+        if fecha_destete:
+
+            # En caso de que venga como datetime
+            if isinstance(fecha_destete, datetime):
+                fecha_destete = fecha_destete.date()
+
+            # Fecha mínima permitida (3 días después del destete)
+            fecha_minima = fecha_destete + timedelta(days=3)
+
+            if fecha_servicio < fecha_minima:
+
+                dias = (fecha_servicio - fecha_destete).days
+
+                mensaje.value = (
+                    f"El servicio solo puede registrarse 3 días después del último destete. "
+                    f"Solo han transcurrido {dias} días."
+                )
+
+                mensaje.color = ft.Colors.RED
+                e.page.update()
+                return
+            
         
         if not tipo_input.value:
         

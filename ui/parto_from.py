@@ -4,6 +4,8 @@ import flet as ft
 from models.parto import Parto
 from dao.parto_dao import PartoDAO
 from dao.cerda_dao import CerdaDAO
+from dao.servicio_dao import ServicioDAO
+from datetime import datetime
 
 
 
@@ -391,15 +393,50 @@ def parto_form(regresar, parto=None):
         cerda_id = int(cerda_input.value)
 
         cerda = cerda_dao.obtener_por_id(cerda_id)
+        
+        servicio_dao = ServicioDAO()
+
+        fecha_servicio = servicio_dao.ultimo_servicio(cerda_id)
+
+        if fecha_servicio:
+
+         fecha_parto = datetime.strptime(
+         fecha_input.value,
+         "%Y/%m/%d"
+            ).date()
+
+         dias = (fecha_parto - fecha_servicio).days
+
+         if dias < 111:
+
+            mensaje.value = (
+             f"El parto no puede registrarse antes de los 111 días del servicio. "
+             f"Solo han transcurrido {dias} días."
+            
+            )
+            mensaje.color = ft.Colors.RED
+
+            e.page.update()
+
+            return
+          
+         if dias > 120:
+              
+            mensaje.value = (
+            f"Han transcurrido {dias} días desde el servicio. "
+            "Verifique que la fecha del parto sea correcta."
+            )
+        
 
 
-        if cerda.estado != "Gestante":
-         mensaje.value = (
-         f"La cerda {cerda.arete} no está en estado Gestante."
-         )
-         mensaje.color = ft.Colors.RED
-         e.page.update()
-         return
+            mensaje.color = ft.Colors.RED
+
+            e.page.update()
+
+            return
+
+
+
 
 
 

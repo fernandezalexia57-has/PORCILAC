@@ -5,6 +5,8 @@ import flet as ft
 from models.destete import Destete
 from dao.destete_dao import DesteteDAO
 from dao.cerda_dao import CerdaDAO
+from dao.parto_dao import PartoDAO
+from datetime import datetime
 
 
 
@@ -274,6 +276,47 @@ def destete_form(regresar, destete=None):
             e.page.update()
 
             return
+        
+        cerda_id = int(cerda_input.value)
+
+        parto_dao = PartoDAO()
+
+        fecha_parto = parto_dao.ultimo_parto(cerda_id)
+
+        if fecha_parto:
+
+            fecha_destete = datetime.strptime(
+             fecha_input.value,
+            "%Y/%m/%d"
+            ).date()
+
+            dias = (fecha_destete - fecha_parto).days
+
+            if dias < 21:
+
+                mensaje.value = (
+                f"El destete no puede registrarse antes de los 21 días del parto. "
+                f"Solo han transcurrido {dias} días."
+                )
+
+                mensaje.color = ft.Colors.RED
+                e.page.update()
+                return
+
+            if dias > 35:
+
+                mensaje.value = (
+                 f"Han transcurrido {dias} días desde el parto. "
+                "Verifique que la fecha del destete sea correcta."
+                )
+
+                mensaje.color = ft.Colors.RED
+                e.page.update()
+                return
+
+
+
+
 
 
 
@@ -295,6 +338,23 @@ def destete_form(regresar, destete=None):
 
             return
         
+        cerda_id = int(cerda_input.value)
+
+        parto_dao = PartoDAO()
+        
+        lechones_vivos = parto_dao.ultimo_lechones_vivos(cerda_id)
+
+        if int(numle_input.value) > lechones_vivos:
+
+            mensaje.value = (
+                f"No puede registrar {numle_input.value} lechones destetados. "
+                f"El último parto tuvo únicamente {lechones_vivos} lechones vivos."
+            )
+
+            mensaje.color = ft.Colors.RED
+            e.page.update()
+            return
+                
         if not peso_input.value:
                 
                 
@@ -394,7 +454,7 @@ def destete_form(regresar, destete=None):
 
             if cerda:
 
-                cerda.estado = "Vacia"
+                cerda.estado = "Vacía"
 
                 cerda_dao.actualizar(
                     cerda

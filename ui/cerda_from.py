@@ -3,8 +3,8 @@ import flet as ft
 from models.cerda import Cerda
 from dao.cerda_dao import CerdaDAO 
 
-def cerda_form(regresar):
-    arete_imput = ft.TextField(
+def cerda_form(regresar, cerda=None):
+    arete_input = ft.TextField(
         label ="Número de Arete de la cerda: ",
         hint_text="001",
         width= 400
@@ -75,7 +75,8 @@ def cerda_form(regresar):
         ft.dropdown.Option("Celo"),
         ft.dropdown.Option("Gestante"),
         ft.dropdown.Option("Lactante"),
-        ft.dropdown.Option("Vacía")
+        ft.dropdown.Option("Vacía"),
+        ft.dropdown.Option("Baja")
      ]
     )
     
@@ -105,62 +106,203 @@ def cerda_form(regresar):
      ]
      )
     
+    # ==========================
+    # CARGAR DATOS PARA EDITAR
+    # ==========================
+
+    if cerda:
+
+        arete_input.value = str(
+            cerda.arete
+        )
+        
+        raza_input.value = str(
+            cerda.raza
+        )
+        
+        color_input.value = str(
+            cerda.color
+        )
+        
+        edad_input.value = str(
+            cerda.edad
+        )
+        
+        estado_input.value = str(
+            cerda.estado
+        )
+        
+
+        fecha_input.value = str(
+            cerda.fecha
+        )
+
+
+
+
     mensaje = ft.Text(
         "",
-        color = ft.Colors.GREEN
-    )
+    color=ft.Colors.GREEN
+     )
+    
+    
+    # Guardar/ Actualizar
     
     def guardar_cerda(e):
         #Recuperar los valores del TextField
-        arete = arete_imput.value #nombre del TextField. value
+        arete = arete_input.value #nombre del TextField. value
         raza = raza_input.value
         color = color_input.value
         edad = edad_input.value
         estado = estado_input.value 
         fecha = fecha_input.value 
          
-        #Validacion de campos vacios
-        if arete == "" or raza == "" or color == "" or edad == "" or estado == "" or fecha == "":
-            mensaje.value = "Todos los campos son obligatorios"
+        
+        
+        if not arete_input.value:
+            mensaje.value = "Escriba el número de arete de la cerda"
             mensaje.color = ft.Colors.RED
             e.page.update()
-            return 
+            return
+
+        if len(arete_input.value) != 3 or not arete_input.value.isdigit():
+            mensaje.value = "El número de arete debe contener exactamente 3 dígitos"
+            mensaje.color = ft.Colors.RED
+            e.page.update()
+            return  
         
-        try:
-            cerda_dao = CerdaDAO()
-            id = cerda_dao.obtener_ultimo_id() +1 
+        
+
+        if not raza_input.value:
+
+
+            mensaje.value = (
+                "Seleccione la raza de la cerda"
+            )
+
+            mensaje.color = ft.Colors.RED
+
+            e.page.update()
+
+            return
+        
+        if not color_input.value:
+
+
+            mensaje.value = (
+                "Seleccione el color de la cerda"
+            )
+
+            mensaje.color = ft.Colors.RED
+
+            e.page.update()
+
+            return
+        
+        if not estado_input.value:
+
+
+            mensaje.value = (
+                "Seleccione el estado reproductivo en el que se encuentra de la cerda"
+            )
+
+            mensaje.color = ft.Colors.RED
+
+            e.page.update()
+
+            return
+        
+        
+        if not fecha_input.value:
+
+
+            mensaje.value = (
+                "Seleccione la fecha de registro"
+            )
+
+            mensaje.color = ft.Colors.RED
+
+            e.page.update()
+
+            return
+        
+        
+        cerda_dao = CerdaDAO()
+        
+        
+        if not cerda:
+            if cerda_dao.existe_arete(arete):
+                mensaje.value = (
+                f"Ya existe una cerda con el arete {arete}"
+                 )
+                mensaje.color = ft.Colors.RED
+                e.page.update()
+                return
+        
+        
+
+   
+        # ==========================
+        # EDITAR
+        # ==========================
+
+        if cerda:
+
+
+            cerda.arete = arete
             
-            nueva_cerda = Cerda(
-                id=id,
-                arete= arete,
-                raza= raza,
-                color= color,
-                edad=int(edad),
-                estado=estado,
-                fecha=fecha
+            cerda.raza = raza_input.value
+            
+            cerda.color = color_input.value
+            
+            cerda.edad = int(
+                edad_input.value
+                )
+            
+            cerda.estado = estado_input.value
+            
+
+            cerda.fecha = fecha_input.value
+            
+            cerda_dao.actualizar(
+             cerda
+                )
+
+
+            regresar(
+             f"Cerda {cerda.arete} actualizada correctamente"
             )
             
-            cerda_dao.insertar(nueva_cerda)
             
-            mensaje.value = f"La cerda  '{arete}' ha sido insertada"
-            mensaje.color = ft.Colors.GREEN
-            arete_imput.value = ""
-            raza_input.value = ""
-            color_input.value = ""
-            edad_input.value = ""
-            estado_input.value = ""
-            fecha_input.value = ""
+
+
+
+        # ==========================
+        # NUEVO
+        # ==========================
+
+        else:
+
+
+            nuevo_cerda = Cerda(
+            None,
+            arete_input.value,
+            raza_input.value,
+            color_input.value,
+            int(edad_input.value),
+            estado_input.value,
+            fecha_input.value
+            )
+
+            cerda_dao.insertar(nuevo_cerda)
+
+            regresar("Cerda registrada correctamente")
+
+
+               
+      
             
-            
-        except ValueError:
-            mensaje.value = "El campo 'Edad' debe ser un número entero"
-            mensaje.color = ft.Colors.RED
-        except Exception as error:
-            mensaje.value = f"Error al insertar la cerda: {error}"
-            mensaje.color=ft.Colors.RED
-            
-            
-        e.page.update()
+
             
     return ft.Container(
        padding = 30,
@@ -178,7 +320,7 @@ def cerda_form(regresar):
                    color = ft.Colors.BLACK_87
                ),
                
-               arete_imput,
+               arete_input,
                raza_input,
                color_input,
                edad_row,
@@ -200,7 +342,8 @@ def cerda_form(regresar):
                   on_click=lambda e: regresar()
                  ),
                 ft.ElevatedButton(
-                 "Registrar cerda",
+                 
+                 "Actualizar cerda" if cerda else "Registrar cerda",
                  icon=ft.Icons.ADD,
                  style=ft.ButtonStyle(
                  bgcolor="#E85A8E",

@@ -61,6 +61,22 @@ class CerdaDAO:
 
      cursor.close()
      conexion.close()
+     
+     
+    def existe_arete(self, arete):
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = "SELECT COUNT(*) FROM cerdas WHERE arete = %s"
+
+        cursor.execute(sql, (arete,))
+
+        existe = cursor.fetchone()[0] > 0
+
+        cursor.close()
+        conexion.close()
+
+        return existe
         
         
     def actualizar(self, cerda):
@@ -196,3 +212,21 @@ class CerdaDAO:
         )
 
      return None
+ 
+    def dar_baja(self, id):
+
+        conexion = Conexion.obtener_conexion()
+        cursor = conexion.cursor()
+
+        sql = """
+        UPDATE cerdas
+        SET estado = 'Baja'
+        WHERE id = %s
+        """
+
+        cursor.execute(sql, (id,))
+
+        conexion.commit()
+
+        cursor.close()
+        conexion.close()
