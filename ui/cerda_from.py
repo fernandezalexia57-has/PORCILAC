@@ -5,14 +5,19 @@ from dao.cerda_dao import CerdaDAO
 
 def cerda_form(regresar, cerda=None):
     arete_input = ft.TextField(
-        label ="Número de Arete de la cerda: ",
         hint_text="001",
-        width= 400
+        hint_style=ft.TextStyle(
+            color="#9E9E9E",
+            ),
+        width= 300
     )
     
     raza_input = ft.Dropdown(
-     label="Raza",
-     width=400,
+        hint_text="Yorkshire",
+        hint_style=ft.TextStyle(
+            color="#9E9E9E",
+            ),
+     width=300,
      options=[
         ft.dropdown.Option("Yorkshire"),
         ft.dropdown.Option("Landrace"),
@@ -23,8 +28,11 @@ def cerda_form(regresar, cerda=None):
     )
     
     color_input = ft.Dropdown(
-     label="Color",
-     width=400,
+     hint_text="Blanco",
+        hint_style=ft.TextStyle(
+            color="#9E9E9E",
+            ),
+     width=300,
      options=[
         ft.dropdown.Option("Blanco"),
         ft.dropdown.Option("Negro"),
@@ -34,9 +42,8 @@ def cerda_form(regresar, cerda=None):
      )
     
     edad_input = ft.TextField(
-     label="Edad",
      value="1",
-     width=300,
+     width=200,
      read_only=True,
      text_align=ft.TextAlign.CENTER
      )
@@ -69,8 +76,11 @@ def cerda_form(regresar, cerda=None):
      )
 
     estado_input = ft.Dropdown(
-     label="Estado reproductivo",
-     width=400,
+     hint_text="Celo",
+        hint_style=ft.TextStyle(
+            color="#9E9E9E",
+            ),
+     width=300,
      options=[
         ft.dropdown.Option("Celo"),
         ft.dropdown.Option("Gestante"),
@@ -81,15 +91,17 @@ def cerda_form(regresar, cerda=None):
     )
     
     fecha_input = ft.TextField(
-     label="Fecha de registro",
-      hint_text="AAAA/MM/DD",
-     width=340,
+      hint_text="AAAA-MM-DD",
+            hint_style=ft.TextStyle(
+            color="#9E9E9E",
+            ),
+     width=240,
      read_only=True
      )
 
     def seleccionar_fecha(e):
      if e.control.value:
-        fecha_input.value = e.control.value.strftime("%Y/%m/%d")
+        fecha_input.value = e.control.value.strftime("%Y-%m-%d")
         e.page.update()
 
     date_picker = ft.DatePicker(
@@ -299,62 +311,108 @@ def cerda_form(regresar, cerda=None):
             regresar("Cerda registrada correctamente")
 
 
-               
-      
-            
-
-            
+   
     return ft.Container(
-       padding = 30,
-       content = ft.Column(
-           controls = [
-               ft.Text(
-                   "Registro de nueva cerda",
-                   size = 24,
-                   weight= ft.FontWeight.BOLD
-               ),
-               
-               ft.Text(
-                   "Capture los datos básicos de la cerda",
-                   size = 14,
-                   color = ft.Colors.BLACK_87
-               ),
-               
-               arete_input,
-               raza_input,
-               color_input,
-               edad_row,
-               estado_input,
-               fecha_row,
-               date_picker,
-               
-               
-               ft.Row(  
-                controls = [
-              
-                ft.OutlinedButton(
-                  "Cancelar",
-                   icon=ft.Icons.CANCEL,
-                  style=ft.ButtonStyle(
-                color=ft.Colors.BLACK,
-                side=ft.BorderSide(1, ft.Colors.BLACK)
-                 ),
-                  on_click=lambda e: regresar()
-                 ),
-                ft.ElevatedButton(
-                 
-                 "Actualizar cerda" if cerda else "Registrar cerda",
-                 icon=ft.Icons.ADD,
-                 style=ft.ButtonStyle(
-                 bgcolor="#E85A8E",
-                 color=ft.Colors.WHITE
-                  ),
-                 on_click=guardar_cerda
-                  )
-                 ],
-               ),
-               mensaje
-           ],
-           spacing= 15
-       )
-   ) 
+        width=720,
+        padding=30,
+        bgcolor="white",
+        border_radius=8,
+       
+        content=ft.Column(
+            spacing=8,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            controls=[
+                ft.Text(
+                    "Editar información de cerda" if cerda else "Registro de cerda",
+                    size=25,
+                    weight=ft.FontWeight.BOLD
+                ),
+
+                ft.Text(
+                    "Capture los datos básicos de la cerda",
+                    size=14,
+                    
+                ),
+
+                ft.Divider(),
+
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Número de arete de la cerda:", width=200),
+                        arete_input
+                    ]
+                ),
+
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Raza:", width=200),
+                        raza_input
+                    ]
+                ),
+
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Color:", width=200),
+                        color_input
+                    ]
+                ),
+
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Edad:", width=200),
+                        edad_row
+                    ]
+                ),
+
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Estado reproductivo:", width=200),
+                        estado_input
+                    ]
+                ),
+
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Fecha de registro:", width=200),
+                        fecha_row
+                    ]
+                ),
+
+                ft.Divider(),
+
+                mensaje,
+
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=15,
+                    controls=[
+                        ft.OutlinedButton(
+                            "Cancelar",
+                            icon=ft.Icons.CANCEL,
+                            style=ft.ButtonStyle(
+                                color=ft.Colors.BLACK,
+                                side=ft.BorderSide(1, ft.Colors.BLACK)
+                            ),
+                            on_click=lambda e: regresar()
+                        ),
+
+                        ft.ElevatedButton(
+                            "Guardar" if cerda else "Registrar",
+                            icon=ft.Icons.ADD,
+                            style=ft.ButtonStyle(
+                                bgcolor="#E85A8E",
+                                color="white"
+                            ),
+                            on_click=guardar_cerda
+                        )
+                    ]
+                )
+            ]
+        )
+    )

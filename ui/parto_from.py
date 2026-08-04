@@ -31,7 +31,7 @@ def parto_form(regresar, parto=None):
 
         label="Número de arete de la cerda",
 
-        width=400,
+        width=300,
 
         options=[
 
@@ -58,11 +58,12 @@ def parto_form(regresar, parto=None):
 
     fecha_input = ft.TextField(
 
-        label="Fecha del parto",
+        hint_text="AAAA-MM-DD",
+            hint_style=ft.TextStyle(
+                color="#9E9E9E",
+                ),
 
-        hint_text="AAAA/MM/DD",
-
-        width=340,
+        width=240,
 
         read_only=True
 
@@ -75,7 +76,7 @@ def parto_form(regresar, parto=None):
         if e.control.value:
 
             fecha_input.value = (
-                e.control.value.strftime("%Y/%m/%d")
+                e.control.value.strftime("%Y-%m-%d")
             )
 
             e.page.update()
@@ -119,11 +120,9 @@ def parto_form(regresar, parto=None):
 
     vivos_input = ft.TextField(
 
-        label="Lechones vivos",
-
         value="0",
 
-        width=300,
+        width=200,
 
         read_only=True,
 
@@ -134,13 +133,10 @@ def parto_form(regresar, parto=None):
 
 
     muertos_input = ft.TextField(
-
-        label="Lechones muertos",
-         
-
+        
         value="0",
 
-        width=300,
+        width=200,
 
         read_only=True,
 
@@ -152,7 +148,6 @@ def parto_form(regresar, parto=None):
 
     num_le_input = ft.TextField(
 
-        label="Número de lechones",
 
         value="0",
 
@@ -165,9 +160,12 @@ def parto_form(regresar, parto=None):
     )
     
     observaciones_input = ft.TextField(
-     label="Observaciones",
-     hint_text="Escriba aquí las observaciones del parto...",
-     width=400,
+   
+     hint_text="Escriba aquí las observaciones",
+            hint_style=ft.TextStyle(
+            color="#9E9E9E",
+            ),
+     width=300,
      multiline=True,
      min_lines=1,
      max_lines=2
@@ -402,7 +400,7 @@ def parto_form(regresar, parto=None):
 
          fecha_parto = datetime.strptime(
          fecha_input.value,
-         "%Y/%m/%d"
+         "%Y-%m-%d"
             ).date()
 
          dias = (fecha_parto - fecha_servicio).days
@@ -577,7 +575,8 @@ def parto_form(regresar, parto=None):
 
 
     botones = ft.Row(
-
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=15,
         controls=[
 
 
@@ -599,7 +598,7 @@ def parto_form(regresar, parto=None):
 
             ft.ElevatedButton(
 
-          "Actualizar parto" if parto else "Registrar parto",
+          "Guardar" if parto else "Registrar",
 
            icon=(
          ft.Icons.SAVE
@@ -629,13 +628,16 @@ def parto_form(regresar, parto=None):
 
 
     return ft.Container(
-
+        width=720,
         padding=30,
+        bgcolor="white",
+        border_radius=8,
 
 
         content=ft.Column(
 
-            spacing=10,
+            spacing=8,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
 
 
             controls=[
@@ -643,7 +645,7 @@ def parto_form(regresar, parto=None):
 
                 ft.Text(
 
-                    "Registro de parto",
+                    "Editar información de parto" if parto else "Registro parto",
 
                     size=25,
 
@@ -663,21 +665,57 @@ def parto_form(regresar, parto=None):
 
                 ft.Divider(),
 
-                cerda_input,
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Número de arete de la cerda:", width=200),
+                        cerda_input
+                    ]
+                ),
+                
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Fecha de parto:", width=200),
+                        fecha_row
+                    ]
+                ),
 
-
-                fecha_row,
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Lechones Vivos:", width=200),
+                        vivos_row
+                    ]
+                ),
         
 
-                vivos_row,
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Lechones muertos:", width=200),
+                        muertos_row
+                    ]
+                ),
 
 
-                muertos_row,
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Núm. de lechones:", width=200),
+                        num_le_input
+                    ]
+                ),
 
-
-                num_le_input,
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Observaciones:", width=200),
+                        observaciones_input
+                    ]
+                ),
                 
-                observaciones_input,
+                
 
 
 

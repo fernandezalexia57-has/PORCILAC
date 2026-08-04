@@ -30,10 +30,8 @@ def destete_form(regresar, destete=None):
      ]
 
     cerda_input = ft.Dropdown(
-
         label="Número de arete de la cerda",
-
-        width=400,
+        width=300,
 
         options=[
 
@@ -60,11 +58,13 @@ def destete_form(regresar, destete=None):
 
     fecha_input = ft.TextField(
 
-        label="Fecha del destete",
+        hint_text="AAAA-MM-DD",
+        
+        hint_style=ft.TextStyle(
+        color="#9E9E9E",
+        ),
 
-        hint_text="AAAA/MM/DD",
-
-        width=340,
+        width=240,
 
         read_only=True
 
@@ -77,7 +77,7 @@ def destete_form(regresar, destete=None):
         if e.control.value:
 
             fecha_input.value = (
-                e.control.value.strftime("%Y/%m/%d")
+                e.control.value.strftime("%Y-%m-%d")
             )
 
             e.page.update()
@@ -121,11 +121,9 @@ def destete_form(regresar, destete=None):
 
     numle_input = ft.TextField(
 
-        label=" Número de lechones",
-
         value="0",
 
-        width=300,
+        width=200,
 
         read_only=True,
 
@@ -135,9 +133,11 @@ def destete_form(regresar, destete=None):
     
     
     peso_input = ft.TextField(
-            label ="Peso promedio (kg): ",
             hint_text="12.100",
-            width= 400
+            hint_style=ft.TextStyle(
+                color="#9E9E9E",
+                ),
+            width= 300
         )
     
     
@@ -287,7 +287,7 @@ def destete_form(regresar, destete=None):
 
             fecha_destete = datetime.strptime(
              fecha_input.value,
-            "%Y/%m/%d"
+            "%Y-%m-%d"
             ).date()
 
             dias = (fecha_destete - fecha_parto).days
@@ -319,24 +319,6 @@ def destete_form(regresar, destete=None):
 
 
 
-
-        numle= int(
-            numle_input.value
-        )
-
-
-        if numle <= 0:
-
-
-            mensaje.value = (
-                "Debe registrar al menos un lechón"
-            )
-
-            mensaje.color = ft.Colors.RED
-
-            e.page.update()
-
-            return
         
         cerda_id = int(cerda_input.value)
 
@@ -475,7 +457,8 @@ def destete_form(regresar, destete=None):
 
 
     botones = ft.Row(
-
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=15,
         controls=[
 
 
@@ -497,7 +480,7 @@ def destete_form(regresar, destete=None):
 
             ft.ElevatedButton(
 
-          "Actualizar destete" if destete else "Registrar destete",
+          "Guardar" if destete else "Registrar",
 
            icon=(
          ft.Icons.SAVE
@@ -528,12 +511,15 @@ def destete_form(regresar, destete=None):
 
     return ft.Container(
 
+        width=720,
         padding=30,
+        bgcolor="white",
+        border_radius=8,
 
 
         content=ft.Column(
-
-            spacing=10,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=20,
 
 
             controls=[
@@ -541,7 +527,7 @@ def destete_form(regresar, destete=None):
 
                 ft.Text(
 
-                    "Registro de destete",
+                    "Editar información de destete" if destete else "Registro destete",
 
                     size=25,
 
@@ -554,26 +540,48 @@ def destete_form(regresar, destete=None):
                 ft.Text(
 
                     "Capture los datos básicos del destete",
-
                     size=14
 
                 ),
 
                 ft.Divider(),
-
-                cerda_input,
-
-
-                fecha_row,
-        
-
-                numle_row,
                 
-                peso_input,
-                
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Número de arete de la cerda:", width=200),
+                        cerda_input
+                    ]
+                ),
+
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Fecha de destete:", width=200),
+                        fecha_row
+                    ]
+                ),
                 
 
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Número de lechones:", width=200),
+                        numle_row
+                    ]
+                ),
 
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Peso promedio:", width=200),
+                         peso_input
+                    ]
+                ),
+                
+                
+                
+            
 
                 ft.Divider(),
 

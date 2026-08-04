@@ -1,4 +1,5 @@
 import flet as ft
+from tkinter import dialog
 
 from ui.destete_list import destete_list
 from ui.parto_list import parto_list
@@ -63,13 +64,16 @@ def main_window(page: ft.Page):
     #Reacciona al click del botón de libros en el menú lateral
     def mostrar_insertar_cerda(e=None):
 
-     contenido.content = cerda_form(
-        regresar_cerdas
-    )
+        dialog = ft.AlertDialog(
+            modal=True,
+            content=cerda_form(
+            lambda mensaje=None: cerrar_dialog_cerdas(dialog, mensaje)
+            )
+        )       
 
-    page.update()
-
-    page.update()
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
     
     def mostrar_lista_cerdas(e=None):
 
@@ -99,6 +103,7 @@ def main_window(page: ft.Page):
             ver_detalles
             )
     
+    
             if mensaje:
                 page.show_dialog(
                 ft.SnackBar(
@@ -110,32 +115,47 @@ def main_window(page: ft.Page):
             page.update()
 
     page.update()
+    
+    def cerrar_dialog_cerdas(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_cerdas(mensaje)
+
 
     def editar_cerda(cerda):
 
-     contenido.content = cerda_form(
-        regresar_cerdas,
-        cerda
-    )
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=cerda_form(
+                    lambda mensaje=None: cerrar_dialog_cerdas(dialog, mensaje),
+                    cerda
+             
+            )
+        )
 
-    page.update()
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
     
 
-    page.update()
-
-    page.update()
+  
     
 
 
     def mostrar_insertar_parto(e=None):
 
-     contenido.content = parto_form(
-        regresar_partos
-    )
+        dialog = ft.AlertDialog(
+            modal=True,
+            content=parto_form(
+            lambda mensaje=None: cerrar_dialog_partos(dialog, mensaje)
+            )
+        )       
 
-    page.update()
-
-    page.update()
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
     
     def mostrar_lista_partos(e=None):
 
@@ -146,38 +166,62 @@ def main_window(page: ft.Page):
 
     page.update()
             
-    def regresar_partos():
+    def regresar_partos(mensaje=None):
+    
+            contenido.content = parto_list(
+            mostrar_insertar_parto,
+            editar_parto
+            )
+    
+    
+            if mensaje:
+                page.show_dialog(
+                ft.SnackBar(
+                    content=ft.Text(mensaje),
+                    bgcolor=ft.Colors.GREEN,
+                )
+            )
+    
+            page.update()
 
-     contenido.content = parto_list(
-        mostrar_insertar_parto,
-        editar_parto
-    )
 
-    page.update()
+    
+    def cerrar_dialog_partos(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_partos(mensaje)
+        
 
     def editar_parto(parto):
 
-     contenido.content = parto_form(
-        regresar_partos,
-        parto
-    )
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=parto_form(
+                    lambda mensaje=None: cerrar_dialog_partos(dialog, mensaje),
+                    parto
+             
+            )
+        )
 
-    page.update()
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
     
-
-    page.update()
-
-    page.update()
     
     
     def mostrar_insertar_servicio(e=None):
     
-        contenido.content = servicio_form(
-         regresar_servicios
-        )
-    
-        page.update()
-    
+        dialog = ft.AlertDialog(
+            modal=True,
+            content=servicio_form(
+            lambda mensaje=None: cerrar_dialog_servicios(dialog, mensaje)
+            )
+        )       
+
+        page.overlay.append(dialog)
+        dialog.open = True
         page.update()
         
     def mostrar_lista_servicios(e=None):
@@ -206,76 +250,44 @@ def main_window(page: ft.Page):
 
         page.update()
     
+    
+    def cerrar_dialog_servicios(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_servicios(mensaje)
+        
+          
     def editar_servicio(servicio):
     
-         contenido.content = servicio_form(
-            regresar_servicios,
-            servicio
-    )
-    
-    page.update() 
-    
-    
-    def mostrar_insertar_parto(e=None):
-
-     contenido.content = parto_form(
-        regresar_partos
-    )
-
-    page.update()
-
-    page.update()
-    
-    def mostrar_lista_partos(e=None):
-
-     contenido.content = parto_list(
-        mostrar_insertar_parto,
-        editar_parto
-    )
-
-    page.update()
-            
-    def regresar_partos(mensaje=None):
-    
-            contenido.content = parto_list(
-            mostrar_insertar_parto,
-            editar_parto
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=servicio_form(
+                    lambda mensaje=None: cerrar_dialog_servicios(dialog, mensaje),
+                    servicio
+             
             )
-    
-            if mensaje:
-                page.show_dialog(
-                ft.SnackBar(
-                    content=ft.Text(mensaje),
-                    bgcolor=ft.Colors.GREEN,
-                )
-            )
-    
-            page.update()
+        )
 
-    def editar_parto(parto):
-
-     contenido.content = parto_form(
-        regresar_partos,
-        parto
-    )
-
-    page.update()
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
     
 
-    page.update()
-
-    page.update()
-    
     
     def mostrar_insertar_destete(e=None):
     
-        contenido.content = destete_form(
-         regresar_destetes
-    )
-    
-    page.update()
-    
-    page.update()
+        dialog = ft.AlertDialog(
+            modal=True,
+            content=destete_form(
+            lambda mensaje=None: cerrar_dialog(dialog, mensaje)
+            )
+        )       
+
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
         
     def mostrar_lista_destetes(e=None):
     
@@ -302,17 +314,32 @@ def main_window(page: ft.Page):
             )
     
             page.update()
+            
+    
+    def cerrar_dialog(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_destetes(mensaje)
     
     def editar_destete(destete):
     
-         contenido.content = destete_form(
-            regresar_destetes,
-            destete
-    )
+
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=destete_form(
+                    lambda mensaje=None: cerrar_dialog(dialog, mensaje),
+                    destete
+             
+            )
+        )
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
     
-    page.update() 
     
-    
+
     
 
     menu_lateral = ft.Container(

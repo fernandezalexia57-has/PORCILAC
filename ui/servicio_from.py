@@ -30,7 +30,7 @@ def servicio_form(regresar, servicio=None):
 
         label="Número de arete de la cerda",
 
-        width=400,
+        width=300,
 
         options=[
 
@@ -57,11 +57,12 @@ def servicio_form(regresar, servicio=None):
 
     fecha_input = ft.TextField(
 
-        label="Fecha de servicio",
+        hint_text="AAAA-MM-DD",
+            hint_style=ft.TextStyle(
+                color="#9E9E9E",
+                ),
 
-        hint_text="AAAA/MM/DD",
-
-        width=340,
+        width=240,
 
         read_only=True
 
@@ -74,7 +75,7 @@ def servicio_form(regresar, servicio=None):
         if e.control.value:
 
             fecha_input.value = (
-                e.control.value.strftime("%Y/%m/%d")
+                e.control.value.strftime("%Y-%m-%d")
             )
 
             e.page.update()
@@ -112,8 +113,11 @@ def servicio_form(regresar, servicio=None):
 
 
     tipo_input = ft.Dropdown(
-         label="Tipo de servicio reproductivo",
-         width=400,
+        hint_text="Monta natural",
+                     hint_style=ft.TextStyle(
+                color="#9E9E9E",
+                ),
+         width=300,
          options=[
             ft.dropdown.Option("Monta natural"),
             ft.dropdown.Option("Inseminación"),
@@ -194,7 +198,7 @@ def servicio_form(regresar, servicio=None):
         # Convertir la fecha del formulario
         fecha_servicio = datetime.strptime(
             fecha_input.value,
-            "%Y/%m/%d"
+            "%Y-%m-%d"
         ).date()
 
         # Si la cerda ya tiene destetes registrados
@@ -346,7 +350,8 @@ def servicio_form(regresar, servicio=None):
 
 
     botones = ft.Row(
-
+        alignment=ft.MainAxisAlignment.CENTER,
+        spacing=15,
         controls=[
 
 
@@ -368,7 +373,7 @@ def servicio_form(regresar, servicio=None):
 
             ft.ElevatedButton(
 
-          "Actualizar servicio" if servicio else "Registrar servicio",
+          "Guardar" if servicio else "Registrar",
 
            icon=(
          ft.Icons.SAVE
@@ -398,21 +403,23 @@ def servicio_form(regresar, servicio=None):
 
 
     return ft.Container(
-
+        width=720,
         padding=30,
+        bgcolor="white",
+        border_radius=8,
 
 
         content=ft.Column(
-
-            spacing=10,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=20,
 
 
             controls=[
 
 
                 ft.Text(
-
-                    "Registro de Reproducción",
+                    
+                    "Editar información de reproducción" if servicio else "Registro de Reproducción",
 
                     size=25,
 
@@ -424,22 +431,37 @@ def servicio_form(regresar, servicio=None):
 
                 ft.Text(
 
-                    "Capture los datos básicos del servicio",
+                    "Capture los datos básicos del servicio reproductivo",
 
                     size=14
 
                 ),
 
                 ft.Divider(),
+                
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Número de arete de la cerda:", width=200),
+                        cerda_input
+                    ]
+                ),
 
-                cerda_input,
-
-
-                fecha_row,
-        
-                tipo_input,
-
-
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Fecha de servicio:", width=200),
+                        fecha_row
+                    ]
+                ),
+                
+                ft.Row(
+                    vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                    controls=[
+                        ft.Text("Fecha de servicio:", width=200),
+                        tipo_input,
+                    ]
+                ),
 
                 ft.Divider(),
 
