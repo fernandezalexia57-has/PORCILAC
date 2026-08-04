@@ -13,12 +13,15 @@ def reportes_form(regresar):
     except Exception as e:
         print("Error al obtener los destetes para el reporte:", e)
 
-    # Campos de fecha para el reporte
+    # Campos de fecha con el icono de calendario INTEGRADO DENTRO del campo
     fecha_inicio_input = ft.TextField(
         label="Fecha de inicio",
         hint_text="AAAA/MM/DD",
-        width=280,
-        read_only=True
+        expand=True,
+        read_only=True,
+        border_radius=8,
+        bgcolor=ft.Colors.WHITE,
+        suffix_icon=ft.Icons.CALENDAR_MONTH
     )
 
     def seleccionar_fecha_inicio(e):
@@ -31,8 +34,11 @@ def reportes_form(regresar):
     fecha_termino_input = ft.TextField(
         label="Fecha de término",
         hint_text="AAAA/MM/DD",
-        width=280,
-        read_only=True
+        expand=True,
+        read_only=True,
+        border_radius=8,
+        bgcolor=ft.Colors.WHITE,
+        suffix_icon=ft.Icons.CALENDAR_MONTH
     )
 
     def seleccionar_fecha_termino(e):
@@ -44,16 +50,18 @@ def reportes_form(regresar):
 
     tipo_reporte_dropdown = ft.Dropdown(
         label="Tipo de reporte",
-        width=280,
+        expand=True,
         options=[
             ft.dropdown.Option("Mensual"),
             ft.dropdown.Option("Semanal"),
             ft.dropdown.Option("Anual")
         ],
-        value="Mensual"
+        value="Mensual",
+        border_radius=8,
+        bgcolor=ft.Colors.WHITE
     )
 
-    mensaje_reporte = ft.Text("", color=ft.Colors.GREEN)
+    mensaje_reporte = ft.Text("", size=13)
 
     def generar_reporte(e):
         tipo = tipo_reporte_dropdown.value
@@ -77,111 +85,95 @@ def reportes_form(regresar):
                 )
                 
                 if exito:
-                    mensaje_reporte.value = f"Reporte '{tipo}' generado y guardado en la BD"
+                    mensaje_reporte.value = f"Reporte '{tipo}' guardado con éxito"
                     mensaje_reporte.color = ft.Colors.GREEN
                 else:
-                    mensaje_reporte.value = "Error al guardar el reporte en la base de datos"
+                    mensaje_reporte.value = "Error al guardar en la base de datos"
                     mensaje_reporte.color = ft.Colors.RED
             except Exception as err:
                 print("Error detallado al generar reporte:", err)
-                mensaje_reporte.value = "Ocurrió un error inesperado al guardar"
+                mensaje_reporte.value = "Ocurrió un error inesperado"
                 mensaje_reporte.color = ft.Colors.RED
                 
         e.page.update()
 
-    # --- TARJETAS SUPERIORES ---
-    tarjeta_preñadas = ft.Container(
-        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
-        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
-        content=ft.Column(controls=[
-            ft.Text("Cerdas preñadas", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
-            ft.Row(controls=[
-                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.PINK_400, size=28),
-                ft.Text("20", size=22, color=ft.Colors.PINK_400, weight=ft.FontWeight.BOLD)
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
-        ], spacing=5)
-    )
+    # --- TARJETAS SUPERIORES MÁS ANCHAS ---
+    def crear_tarjeta(titulo, valor, icono, color):
+        return ft.Container(
+            expand=True,
+            height=110,
+            padding=20,
+            bgcolor=ft.Colors.WHITE,
+            border_radius=12,
+            shadow=ft.BoxShadow(spread_radius=1, blur_radius=8, color=ft.Colors.BLACK12),
+            content=ft.Column(
+                controls=[
+                    ft.Text(titulo, size=14, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
+                    ft.Row(
+                        controls=[
+                            ft.Icon(icono, color=color, size=32),
+                            ft.Text(valor, size=26, color=color, weight=ft.FontWeight.BOLD)
+                        ],
+                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                        vertical_alignment=ft.CrossAxisAlignment.CENTER
+                    )
+                ],
+                spacing=8,
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        )
 
-    tarjeta_partos = ft.Container(
-        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
-        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
-        content=ft.Column(controls=[
-            ft.Text("Partos este mes", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
-            ft.Row(controls=[
-                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.BLUE_600, size=28),
-                ft.Text("8", size=22, color=ft.Colors.BLUE_600, weight=ft.FontWeight.BOLD)
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
-        ], spacing=5)
-    )
+    tarjeta_preñadas = crear_tarjeta("Cerdas preñadas", "20", ft.Icons.SAVINGS, ft.Colors.PINK_400)
+    tarjeta_partos = crear_tarjeta("Partos este mes", "8", ft.Icons.SAVINGS, ft.Colors.BLUE_600)
+    tarjeta_destetados = crear_tarjeta("Lechones destetados", total_lechones_real, ft.Icons.SAVINGS, ft.Colors.GREEN_600)
+    tarjeta_mortalidad = crear_tarjeta("Mortalidad (%)", "2.1%", ft.Icons.SAVINGS, ft.Colors.RED_700)
 
-    tarjeta_destetados = ft.Container(
-        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
-        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
-        content=ft.Column(controls=[
-            ft.Text("Lechones destetados", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
-            ft.Row(controls=[
-                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.GREEN_600, size=28),
-                ft.Text(total_lechones_real, size=22, color=ft.Colors.GREEN_600, weight=ft.FontWeight.BOLD)
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
-        ], spacing=5)
-    )
-
-    tarjeta_mortalidad = ft.Container(
-        width=210, height=95, padding=15, bgcolor=ft.Colors.WHITE, border_radius=10,
-        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
-        content=ft.Column(controls=[
-            ft.Text("Mortalidad (%)", size=13, color=ft.Colors.BLACK54, weight=ft.FontWeight.W_500),
-            ft.Row(controls=[
-                ft.Icon(ft.Icons.SAVINGS, color=ft.Colors.RED_700, size=28),
-                ft.Text("2.1%", size=22, color=ft.Colors.RED_700, weight=ft.FontWeight.BOLD)
-            ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN, vertical_alignment=ft.CrossAxisAlignment.CENTER)
-        ], spacing=5)
-    )
-
-    # Gráfica simulada con barras de Flet
+    # --- GRÁFICA SÚPER AMPLIADA (ocupa todo el ancho restante y más altura) ---
     grafica_container = ft.Container(
-        width=480,
-        height=330,
-        padding=20,
+        expand=True,  # Se expande para ocupar todo el ancho disponible a la izquierda
+        height=480,   # Mucho más alta
+        padding=30,
         bgcolor=ft.Colors.WHITE,
-        border_radius=10,
-        shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
+        border_radius=12,
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=8, color=ft.Colors.BLACK12),
         content=ft.Column(
             controls=[
-                ft.Text("Nacidos vivos vs Destetados", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text("Nacidos vivos vs Destetados", size=20, weight=ft.FontWeight.BOLD),
                 ft.Row(
                     controls=[
-                        ft.Row([ft.Container(width=10, height=10, bgcolor="#3B82F6", border_radius=5), ft.Text("Nacidos vivos", size=12)]),
-                        ft.Row([ft.Container(width=10, height=10, bgcolor="#E85A8E", border_radius=5), ft.Text("Destetados", size=12)]),
+                        ft.Row([ft.Container(width=14, height=14, bgcolor="#3B82F6", border_radius=7), ft.Text("Nacidos vivos", size=14)]),
+                        ft.Row([ft.Container(width=14, height=14, bgcolor="#E85A8E", border_radius=7), ft.Text("Destetados", size=14)]),
                     ],
-                    spacing=20
+                    spacing=30
                 ),
-                ft.Divider(height=10, color=ft.Colors.TRANSPARENT),
+                ft.Divider(height=20, color=ft.Colors.TRANSPARENT),
                 ft.Row(
                     controls=[
-                        ft.Column([ft.Container(width=30, height=140, bgcolor="#3B82F6", border_radius=4), ft.Text("Mes 1", size=10)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                        ft.Column([ft.Container(width=30, height=120, bgcolor="#E85A8E", border_radius=4), ft.Text("")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                        ft.Column([ft.Container(width=30, height=150, bgcolor="#3B82F6", border_radius=4), ft.Text("Mes 2", size=10)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                        ft.Column([ft.Container(width=30, height=160, bgcolor="#E85A8E", border_radius=4), ft.Text("")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                        ft.Column([ft.Container(width=30, height=130, bgcolor="#3B82F6", border_radius=4), ft.Text("Mes 3", size=10)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-                        ft.Column([ft.Container(width=30, height=145, bgcolor="#E85A8E", border_radius=4), ft.Text("")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                        ft.Column([ft.Container(width=55, height=240, bgcolor="#3B82F6", border_radius=8), ft.Text("Mes 1", size=13, weight=ft.FontWeight.W_500)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                        ft.Column([ft.Container(width=55, height=200, bgcolor="#E85A8E", border_radius=8), ft.Text("")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                        ft.Column([ft.Container(width=55, height=270, bgcolor="#3B82F6", border_radius=8), ft.Text("Mes 2", size=13, weight=ft.FontWeight.W_500)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                        ft.Column([ft.Container(width=55, height=230, bgcolor="#E85A8E", border_radius=8), ft.Text("")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                        ft.Column([ft.Container(width=55, height=300, bgcolor="#3B82F6", border_radius=8), ft.Text("Mes 3", size=13, weight=ft.FontWeight.W_500)], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
+                        ft.Column([ft.Container(width=55, height=255, bgcolor="#E85A8E", border_radius=8), ft.Text("")], horizontal_alignment=ft.CrossAxisAlignment.CENTER),
                     ],
                     alignment=ft.MainAxisAlignment.SPACE_AROUND,
                     vertical_alignment=ft.CrossAxisAlignment.END,
                     expand=True
                 )
             ],
-            spacing=5
+            spacing=15,
+            expand=True
         )
     )
 
-    # Botones de Exportar e Imprimir
+    # Botones de Exportar e Imprimir más grandes
     btn_exportar = ft.ElevatedButton(
         "Exportar", 
         icon=ft.Icons.DOWNLOAD, 
         bgcolor=ft.Colors.GREEN_700, 
         color=ft.Colors.WHITE,
-        width=134
+        height=45,
+        expand=True
     )
     
     btn_imprimir = ft.ElevatedButton(
@@ -189,7 +181,55 @@ def reportes_form(regresar):
         icon=ft.Icons.PRINT, 
         bgcolor=ft.Colors.GREEN_700, 
         color=ft.Colors.WHITE,
-        width=134
+        height=45,
+        expand=True
+    )
+
+    # --- PANEL DE CONFIGURACIÓN DE REPORTE AMPLIADO (ancho fijo grande y altura acorde a la gráfica) ---
+    panel_filtros = ft.Container(
+        width=440,  # Más ancho
+        height=480, # Misma altura grande que la gráfica
+        padding=30,
+        bgcolor=ft.Colors.WHITE,
+        border_radius=12,
+        shadow=ft.BoxShadow(spread_radius=1, blur_radius=8, color=ft.Colors.BLACK12),
+        content=ft.Column(
+            controls=[
+                ft.Text("Configuración de Reporte", size=18, weight=ft.FontWeight.BOLD),
+                tipo_reporte_dropdown,
+                
+                ft.Container(
+                    content=fecha_inicio_input,
+                    on_click=lambda e: e.page.open(date_picker_inicio)
+                ),
+                
+                ft.Container(
+                    content=fecha_termino_input,
+                    on_click=lambda e: e.page.open(date_picker_termino)
+                ),
+                
+                date_picker_inicio,
+                date_picker_termino,
+                
+                ft.ElevatedButton(
+                    "Generar reporte",
+                    icon=ft.Icons.BAR_CHART,
+                    bgcolor="#E85A8E",
+                    color=ft.Colors.WHITE,
+                    height=50,
+                    expand=True,
+                    on_click=generar_reporte
+                ),
+                mensaje_reporte,
+                ft.Row(
+                    controls=[btn_exportar, btn_imprimir],
+                    spacing=15,
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+                )
+            ],
+            spacing=20,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN
+        )
     )
 
     return ft.Container(
@@ -198,62 +238,29 @@ def reportes_form(regresar):
         bgcolor=ft.Colors.GREY_50,
         content=ft.Column(
             controls=[
-                ft.Text("Reportes", size=26, weight=ft.FontWeight.BOLD),
+                ft.Text("Reportes", size=28, weight=ft.FontWeight.BOLD),
                 ft.Divider(height=10, color=ft.Colors.TRANSPARENT),
                 
-                # Fila de tarjetas superiores
+                # Fila superior de los 4 bloques anchos
                 ft.Row(
                     controls=[tarjeta_preñadas, tarjeta_partos, tarjeta_destetados, tarjeta_mortalidad],
-                    spacing=15,
-                    wrap=False
+                    spacing=20,
+                    expand=False
                 ),
                 
                 ft.Divider(height=15, color=ft.Colors.TRANSPARENT),
                 
-                # Contenido inferior: Gráfica y Panel de Filtros
+                # Fila inferior con gráfica expandida y panel de filtros grande ocupando toda la pantalla
                 ft.Row(
-                    controls=[
-                        grafica_container,
-                        ft.Container(
-                            width=320,
-                            padding=20,
-                            bgcolor=ft.Colors.WHITE,
-                            border_radius=10,
-                            shadow=ft.BoxShadow(spread_radius=1, blur_radius=5, color=ft.Colors.GREY_300),
-                            content=ft.Column(
-                                controls=[
-                                    tipo_reporte_dropdown,
-                                    fecha_inicio_input,
-                                    ft.IconButton(icon=ft.Icons.CALENDAR_MONTH, on_click=lambda e: e.page.show_dialog(date_picker_inicio)),
-                                    fecha_termino_input,
-                                    ft.IconButton(icon=ft.Icons.CALENDAR_MONTH, on_click=lambda e: e.page.show_dialog(date_picker_termino)),
-                                    date_picker_inicio,
-                                    date_picker_termino,
-                                    ft.ElevatedButton(
-                                        "Generar reporte",
-                                        icon=ft.Icons.BAR_CHART,
-                                        bgcolor="#E85A8E",
-                                        color=ft.Colors.WHITE,
-                                        width=280,
-                                        on_click=generar_reporte
-                                    ),
-                                    mensaje_reporte,
-                                    ft.Row(
-                                        controls=[btn_exportar, btn_imprimir],
-                                        spacing=12,
-                                        alignment=ft.MainAxisAlignment.SPACE_BETWEEN
-                                    )
-                                ],
-                                spacing=12
-                            )
-                        )
-                    ],
-                    spacing=20,
-                    alignment=ft.MainAxisAlignment.START,
-                    vertical_alignment=ft.CrossAxisAlignment.START
+                    controls=[grafica_container, panel_filtros],
+                    spacing=25,
+                    alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+                    vertical_alignment=ft.CrossAxisAlignment.START,
+                    expand=True
                 )
             ],
             spacing=10,
+            expand=True,
             scroll=ft.ScrollMode.AUTO
         )
     )
