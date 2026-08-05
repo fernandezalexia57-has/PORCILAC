@@ -5,7 +5,7 @@ from ui.usuarios_list import usuarios_list
 from dao.usuario_dao import UsuarioDAO
 from models.usuario import Usuario
 
-def main_window(page: ft.Page):
+def empleado_view(page: ft.Page):
     page.title = "Sistema de Gestion de Reproduccion de Cerdas"
     page.window_width = 1100
     page.window_height = 700
@@ -106,16 +106,6 @@ def main_window(page: ft.Page):
                         shape = ft.RoundedRectangleBorder(radius = 2),
                     ),
                     on_click = mostrar_inicio
-                ),
-                ft.ElevatedButton(
-                    "Empleados",
-                    icon = ft.Icons.PEOPLE,
-                    width = 180,
-                    color = ft.Colors.BLACK,
-                    style = ft.ButtonStyle(
-                        shape = ft.RoundedRectangleBorder(radius = 2),
-                    ),
-                    on_click = mostrar_lista_usuarios
                 ),
                 ft.ElevatedButton(
                     "🐷Cerdas",
