@@ -293,7 +293,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-    shape = ft.RoundedRectangleBorder(radius = 2),
+        shape = ft.RoundedRectangleBorder(radius = 2),
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_insertar_cerda(e))
     )
@@ -304,7 +304,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-    shape = ft.RoundedRectangleBorder(radius = 2),
+        shape = ft.RoundedRectangleBorder(radius = 2),
     ),
     on_click = lambda e: (seleccionar_boton(e.control), mostrar_lista_usuarios(e))     
     )
@@ -315,7 +315,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-    shape = ft.RoundedRectangleBorder(radius = 2),
+        shape = ft.RoundedRectangleBorder(radius = 2),
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_cerdas(e))
     )
@@ -326,7 +326,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-    shape = ft.RoundedRectangleBorder(radius = 2),
+        shape = ft.RoundedRectangleBorder(radius = 2),
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_servicios(e))
     )
@@ -337,7 +337,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-    shape = ft.RoundedRectangleBorder(radius = 2),
+        shape = ft.RoundedRectangleBorder(radius = 2),
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_partos(e))
     )
@@ -348,7 +348,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-    shape = ft.RoundedRectangleBorder(radius = 2),
+        shape = ft.RoundedRectangleBorder(radius = 2),
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_destetes(e))
     )
@@ -359,7 +359,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-    shape = ft.RoundedRectangleBorder(radius = 2),
+        shape = ft.RoundedRectangleBorder(radius = 2),
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_reportes(e))
     )
@@ -380,25 +380,17 @@ def main_window(page: ft.Page):
         bgcolor = ft.Colors.PINK_300,
         padding = 20,
         content = ft.Column(
+            expand = True,
             controls = [
-                ft.Column(
-                    controls = [
-                        ft.Text(
-                            "Biblioteca",  
-                            size = 22,
-                            weight = ft.FontWeight.BOLD,
-                            color = ft.Colors.WHITE
-                        ),
-                        ft.Text(
-                            "Sistema de gestión",
-                            size = 12,
-                            color = ft.Colors.WHITE
-                        ),
-                        ft.Divider(color = ft.Colors.PINK_700),
-                    ]
+                ft.Image(
+                    src="logo.png",
+                    width=240,
+                    height=180,
+                    fit="contain"
                 ),
+                ft.Container(height=15),
                 ft.Column(
-                    spacing=65,
+                    spacing=45,
                     controls=botones_menu
                 ),
                 ft.Column(
@@ -407,7 +399,8 @@ def main_window(page: ft.Page):
                     controls = [ 
                     ]
                 ),  
-                ft.Container(expand=True)
+                ft.Container(expand=True),
+                
             ]
         )
 
