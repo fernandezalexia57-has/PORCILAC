@@ -1,5 +1,10 @@
 import flet as ft
 
+<<<<<<< Updated upstream
+=======
+from tkinter import dialog
+
+>>>>>>> Stashed changes
 from dao.usuario_dao import UsuarioDAO
 from ui.usuarios_form import usuario_form
 from ui.usuarios_list import usuarios_list
@@ -112,6 +117,7 @@ def main_window(page: ft.Page):
         )
         page.update()
 
+<<<<<<< Updated upstream
     #Reacciona al click del botón de cerdas en el menú lateral
     def mostrar_insertar_cerda(e=None):
         contenido.content = cerda_form(
@@ -122,6 +128,24 @@ def main_window(page: ft.Page):
     def mostrar_lista_cerdas(e=None):
 
      contenido.content = cerda_list(
+=======
+    def mostrar_insertar_cerda(e=None):
+
+            dialog = ft.AlertDialog(
+                modal=True,
+                content=cerda_form(
+                lambda mensaje=None: cerrar_dialog_cerdas(dialog, mensaje)
+                )
+            )       
+
+            page.overlay.append(dialog)
+            dialog.open = True
+            page.update()
+        
+    def mostrar_lista_cerdas(e=None):
+
+        contenido.content = cerda_list(
+>>>>>>> Stashed changes
         mostrar_insertar_cerda,
         editar_cerda,
         ver_detalles
@@ -147,6 +171,10 @@ def main_window(page: ft.Page):
             ver_detalles
             )
     
+<<<<<<< Updated upstream
+=======
+    
+>>>>>>> Stashed changes
             if mensaje:
                 page.show_dialog(
                 ft.SnackBar(
@@ -158,6 +186,7 @@ def main_window(page: ft.Page):
             page.update()
 
     page.update()
+<<<<<<< Updated upstream
 
     def editar_cerda(cerda):
 
@@ -230,11 +259,70 @@ def main_window(page: ft.Page):
         page.update()
             
     def regresar_partos(mensaje=None):
+=======
+    
+    def cerrar_dialog_cerdas(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_cerdas(mensaje)
+
+
+    def editar_cerda(cerda):
+
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=cerda_form(
+                    lambda mensaje=None: cerrar_dialog_cerdas(dialog, mensaje),
+                    cerda
+                
+            )
+        )
+
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
+    
+
+    
+    
+
+
+    def mostrar_insertar_parto(e=None):
+
+        dialog = ft.AlertDialog(
+            modal=True,
+            content=parto_form(
+            lambda mensaje=None: cerrar_dialog_partos(dialog, mensaje)
+            )
+        )       
+
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
+    
+    def mostrar_lista_partos(e=None):
+
+        contenido.content = parto_list(
+        mostrar_insertar_parto,
+        editar_parto
+    )
+
+    page.update()
+            
+    def regresar_partos(mensaje=None):
+    
+>>>>>>> Stashed changes
             contenido.content = parto_list(
             mostrar_insertar_parto,
             editar_parto
             )
     
+<<<<<<< Updated upstream
+=======
+    
+>>>>>>> Stashed changes
             if mensaje:
                 page.show_dialog(
                 ft.SnackBar(
@@ -242,6 +330,7 @@ def main_window(page: ft.Page):
                     bgcolor=ft.Colors.GREEN,
                 )
             )
+<<<<<<< Updated upstream
             page.update()
     
     #Reacciona al click del botón de destete en el menú lateral
@@ -259,6 +348,127 @@ def main_window(page: ft.Page):
     page.update()
                 
     def regresar_destetes(mensaje=None):
+=======
+    
+            page.update()
+
+
+    
+    def cerrar_dialog_partos(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_partos(mensaje)
+        
+
+    def editar_parto(parto):
+
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=parto_form(
+                    lambda mensaje=None: cerrar_dialog_partos(dialog, mensaje),
+                    parto
+                
+            )
+        )
+
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
+    
+    
+    
+    def mostrar_insertar_servicio(e=None):
+    
+        dialog = ft.AlertDialog(
+            modal=True,
+            content=servicio_form(
+            lambda mensaje=None: cerrar_dialog_servicios(dialog, mensaje)
+            )
+        )       
+
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
+        
+    def mostrar_lista_servicios(e=None):
+    
+            contenido.content = servicio_list(
+            mostrar_insertar_servicio,
+            editar_servicio
+        )
+    
+            page.update()
+                
+    def regresar_servicios(mensaje=None):
+
+        contenido.content = servicio_list(
+        mostrar_insertar_servicio,
+        editar_servicio
+        )
+
+        if mensaje:
+            page.show_dialog(
+            ft.SnackBar(
+                content=ft.Text(mensaje),
+                bgcolor=ft.Colors.GREEN,
+            )
+        )
+
+        page.update()
+    
+    
+    def cerrar_dialog_servicios(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_servicios(mensaje)
+        
+            
+    def editar_servicio(servicio):
+    
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=servicio_form(
+                    lambda mensaje=None: cerrar_dialog_servicios(dialog, mensaje),
+                    servicio
+                
+            )
+        )
+
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
+    
+
+    
+    def mostrar_insertar_destete(e=None):
+    
+        dialog = ft.AlertDialog(
+            modal=True,
+            content=destete_form(
+            lambda mensaje=None: cerrar_dialog(dialog, mensaje)
+            )
+        )       
+
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update()
+        
+    def mostrar_lista_destetes(e=None):
+    
+            contenido.content = destete_list(
+            mostrar_insertar_destete,
+            editar_destete
+    )
+    
+    page.update()
+                
+    def regresar_destetes(mensaje=None):
+    
+>>>>>>> Stashed changes
             contenido.content = destete_list(
             mostrar_insertar_destete,
             editar_destete
@@ -271,6 +481,7 @@ def main_window(page: ft.Page):
                     bgcolor=ft.Colors.GREEN,
                 )
             )
+<<<<<<< Updated upstream
             page.update()
     
     def editar_destete(destete):
@@ -279,6 +490,33 @@ def main_window(page: ft.Page):
             destete
     )
     page.update() 
+=======
+    
+            page.update()
+            
+    
+    def cerrar_dialog(dialog, mensaje=None):
+
+        dialog.open = False
+        page.update()
+
+        regresar_destetes(mensaje)
+    
+    def editar_destete(destete):
+    
+
+        dialog = ft.AlertDialog(
+            modal=True,
+                content=destete_form(
+                    lambda mensaje=None: cerrar_dialog(dialog, mensaje),
+                    destete
+                
+            )
+        )
+        page.overlay.append(dialog)
+        dialog.open = True
+        page.update() 
+>>>>>>> Stashed changes
     
     #Reacciona al click del botón de reportes en el menú lateral
     def mostrar_reportes(e=None):
@@ -293,7 +531,11 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
+<<<<<<< Updated upstream
         shape = ft.RoundedRectangleBorder(radius = 2),
+=======
+    shape = ft.RoundedRectangleBorder(radius = 2),
+>>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_insertar_cerda(e))
     )
@@ -304,7 +546,11 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
+<<<<<<< Updated upstream
         shape = ft.RoundedRectangleBorder(radius = 2),
+=======
+    shape = ft.RoundedRectangleBorder(radius = 2),
+>>>>>>> Stashed changes
     ),
     on_click = lambda e: (seleccionar_boton(e.control), mostrar_lista_usuarios(e))     
     )
@@ -315,7 +561,11 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
+<<<<<<< Updated upstream
         shape = ft.RoundedRectangleBorder(radius = 2),
+=======
+    shape = ft.RoundedRectangleBorder(radius = 2),
+>>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_cerdas(e))
     )
@@ -326,7 +576,11 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
+<<<<<<< Updated upstream
         shape = ft.RoundedRectangleBorder(radius = 2),
+=======
+    shape = ft.RoundedRectangleBorder(radius = 2),
+>>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_servicios(e))
     )
@@ -337,7 +591,11 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
+<<<<<<< Updated upstream
         shape = ft.RoundedRectangleBorder(radius = 2),
+=======
+    shape = ft.RoundedRectangleBorder(radius = 2),
+>>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_partos(e))
     )
@@ -348,7 +606,11 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
+<<<<<<< Updated upstream
         shape = ft.RoundedRectangleBorder(radius = 2),
+=======
+    shape = ft.RoundedRectangleBorder(radius = 2),
+>>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_destetes(e))
     )
@@ -359,7 +621,11 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
+<<<<<<< Updated upstream
         shape = ft.RoundedRectangleBorder(radius = 2),
+=======
+    shape = ft.RoundedRectangleBorder(radius = 2),
+>>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_reportes(e))
     )
@@ -382,6 +648,7 @@ def main_window(page: ft.Page):
         content = ft.Column(
             expand = True,
             controls = [
+<<<<<<< Updated upstream
                 ft.Image(
                     src="logo.png",
                     width=240,
@@ -391,6 +658,26 @@ def main_window(page: ft.Page):
                 ft.Container(height=15),
                 ft.Column(
                     spacing=45,
+=======
+                ft.Column(
+                    controls = [
+                        ft.Text(
+                            "Biblioteca",  
+                            size = 22,
+                            weight = ft.FontWeight.BOLD,
+                            color = ft.Colors.WHITE
+                        ),
+                        ft.Text(
+                            "Sistema de gestión",
+                            size = 12,
+                            color = ft.Colors.WHITE
+                        ),
+                        ft.Divider(color = ft.Colors.PINK_700),
+                    ]
+                ),
+                ft.Column(
+                    spacing=65,
+>>>>>>> Stashed changes
                     controls=botones_menu
                 ),
                 ft.Column(
@@ -399,8 +686,12 @@ def main_window(page: ft.Page):
                     controls = [ 
                     ]
                 ),  
+<<<<<<< Updated upstream
                 ft.Container(expand=True),
                 
+=======
+                ft.Container(expand=True)
+>>>>>>> Stashed changes
             ]
         )
 

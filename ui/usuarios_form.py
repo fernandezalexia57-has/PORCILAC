@@ -3,7 +3,10 @@ import flet as ft
 from models.usuario import Usuario
 from dao.usuario_dao import UsuarioDAO
 from ui.usuarios_list import usuarios_list
+<<<<<<< Updated upstream
     
+=======
+>>>>>>> Stashed changes
 
 def usuario_form(regresar, usuario=None):
     editar = usuario is not None
@@ -66,8 +69,15 @@ def usuario_form(regresar, usuario=None):
 
     password_input = ft.TextField(
         label="Contraseña: ",
+<<<<<<< Updated upstream
         width = 400,
         password=True,
+=======
+        hint_text="xxxxxxxxxx",
+        width = 400,
+        password=True,
+        can_reveal_password=True,
+>>>>>>> Stashed changes
         value=usuario.password if editar else ""
     )
 
@@ -153,6 +163,12 @@ def usuario_form(regresar, usuario=None):
                 )
                 usuario_dao.actualizar(guardar)
 
+<<<<<<< Updated upstream
+=======
+                # regresar(
+                #     f"Usuario {nombre} actualizado correctamente"
+                #             )
+>>>>>>> Stashed changes
 
                 e.page.snack_bar = ft.SnackBar(
                     content=ft.Text(f"Usuario {nombre} actualizado con éxito"),
@@ -187,7 +203,10 @@ def usuario_form(regresar, usuario=None):
             mensaje.color = ft.Colors.RED
             e.page.update()
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     titulo_pantalla = "Editar usuario" if editar else "Registrar nuevo usuario"
     texto_boton = "Actualizar usuario" if editar else "Registrar usuario"
     icono_boton = ft.Icons.SAVE if editar else ft.Icons.ADD

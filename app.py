@@ -3,6 +3,7 @@ import flet as ft
 from configparser import Error
 
 from ui.login_inicio import login_view
+<<<<<<< Updated upstream
 from dao.usuario_dao import UsuarioDAO
 from ui.cerda_detalles import cerda_detalles
 from dao.servicio_dao import ServicioDAO
@@ -11,10 +12,23 @@ from models.usuario import Usuario
 from models.reproduccion import Reproduccion
 from ui.main_window import main_window
 from ui.empleado_view import empleado_view
+=======
+from ui.main_window import main_window
+from ui.empleado_view import empleado_view
+from ui.restablecer_form import restablecer_form
+from dao.usuario_dao import UsuarioDAO
+from ui.cerda_detalles import cerda_detalles
+from dao.servicio_dao import ServicioDAO
+from dao.reproduccion_dao import ReproduccionDAO
+from models.usuario import Usuario
+from models.reproduccion import Reproduccion
+
+>>>>>>> Stashed changes
 
 sesion_usuario = {}  # Diccionario para almacenar la sesión del usuario
 
 def main(page: ft.Page):
+<<<<<<< Updated upstream
     # Función de relleno por si hace clic en ingresar
     # def ir_a_main(datos=None):
     #     page.controls.clear()
@@ -74,6 +88,38 @@ def main(page: ft.Page):
     page.on_view_pop = view_pop
 
     # Arrancamos en el login
+=======
+
+    def route_change(e):
+            # Limpiamos los controles anteriores antes de cargar la vista elegida
+            page.clean()
+            rol = str(sesion_usuario.get("rol", "")).strip().lower()
+
+            if page.route == "/" or page.route == "/login":
+                login_view(page, sesion_usuario)
+
+            elif page.route == "/restablecer":
+                restablecer_form(page)
+
+            elif page.route == "/main_window":
+                if "administrador" in rol or "admin" in rol:
+                    main_window(page)
+                else:
+                    page.go("/login")
+
+            elif page.route == "/empleado":
+                if "empleado" in rol:
+                    empleado_view(page)
+                else:
+                    page.go("/login")
+            else:
+                # Ruta no encontrada: regresa al login
+                page.go("/login")
+
+            page.update()
+
+    page.on_route_change = route_change
+>>>>>>> Stashed changes
     page.go("/login")
 
 if __name__ == "__main__":
@@ -158,6 +204,37 @@ def eliminar_usuarios():
         print(f"Error al eliminar el usuario {id}")
         print(e)
 
+<<<<<<< Updated upstream
+#REPRODUCCION
+
+def ver_reproduccion():
+    try:    
+        reproduccion_dao = ReproduccionDAO()
+
+        reproducciones = reproduccion_dao.obtener_todos()
+
+        print("=== Reproducción en la base de datos ===")
+
+        if len(reproducciones) == 0:
+            print("No hay registros de reproducción.")
+=======
+>>>>>>> Stashed changes
+
+        else:
+            for rep in reproducciones:
+                print("------------------------------------------------------------------------------------------------------------------------------------------------------------")
+                print(
+                    f"ID: {rep.id}\nNumero de Arete: {rep.numArete}\nFecha: {rep.fecha_reproduccion}\nTipo: {rep.tipo}"
+                )
+                print("------------------------------------------------------------------------------------------------------------------------------------------------------------")
+        print("\nConexion exitosa a la base de datos.")
+    except Exception as e:
+        print(f"Error: ")
+        print(e)
+
+<<<<<<< Updated upstream
+=======
+
 #REPRODUCCION
 
 def ver_reproduccion():
@@ -183,6 +260,7 @@ def ver_reproduccion():
         print(f"Error: ")
         print(e)
 
+>>>>>>> Stashed changes
 def insertar_reproduccion():
     numArete = input("Escribe el número de arete de la nueva reproducción: ")
     fecha = input("Escribe la fecha de la nueva reproducción: ")

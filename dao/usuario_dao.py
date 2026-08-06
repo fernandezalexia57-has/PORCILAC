@@ -30,6 +30,32 @@ class UsuarioDAO:
         cursor.close()
         conexion.close()
         return usuarios
+
+    def actualizar_password_por_correo(self, correo, nueva_password):
+        try:
+            conexion = Conexion.obtener_conexion()
+            cursor = conexion.cursor()
+
+            # 1. Verificar si el usuario existe
+            cursor.execute('SELECT id FROM "usuarios" WHERE "correo" = %s', (correo,))
+            usuario = cursor.fetchone()
+
+            if not usuario:
+                cursor.close()
+                conexion.close()
+                return False, "El correo electrónico no está registrado."
+
+            # 2. Actualizar contraseña
+            sql = 'UPDATE "usuarios" SET "password" = %s WHERE "correo" = %s'
+            cursor.execute(sql, (nueva_password, correo))
+
+            conexion.commit()
+            cursor.close()
+            conexion.close()
+            return True, "¡Contraseña actualizada con éxito!"
+
+        except Exception as ex:
+            return False, f"Error al actualizar en la base de datos: {ex}"
     
     def insertar(self, usuario):
         conexion = Conexion.obtener_conexion()

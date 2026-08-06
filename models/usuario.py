@@ -11,12 +11,5 @@ class Usuario:
         self.correo = correo
         self.password = password
 
-        def activar(self):
-            self.activo = True
-            
-
-        def desactivar(self):
-            self.activo = False
-
         def mostrar_info(self):
             return f"Usuario ID: {self.id}, Nombre: {self.nombre}, Apellido Paterno: {self.apellidoPaterno}, Apellido Materno: {self.apellidoMaterno}, Numero de Empleado: {self.noEmpleado}, Tipo: {self.tipo}, Correo: {self.correo}, Contraseña: {self.password} "
