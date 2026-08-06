@@ -484,8 +484,10 @@ def destete_list(nuevo_destete, editar_destete):
 
     buscador = ft.TextField(
 
-        hint_text=
-        "Buscar destete(ID, Arete)",
+        hint_text="Buscar destete por (Núm. Arete, Fecha)",
+        hint_style=ft.TextStyle(
+                    color="#9E9E9E",
+                    ),
 
         width=370,
         height= 48,
@@ -496,32 +498,39 @@ def destete_list(nuevo_destete, editar_destete):
 
 
 
-    filtro = ft.Dropdown(
+    dropdown_filtro = ft.Dropdown(
 
-        width=150,
+        width=235,
 
         value="Todos",
 
         options=[
 
+            ft.dropdown.Option("Todos"),
 
-            ft.dropdown.Option(
-                "Todos"
-            ),
+            ft.dropdown.Option("Más lechones"),
 
+            ft.dropdown.Option("Menos lechones"),
 
-            ft.dropdown.Option(
-                "Fecha de parto"
-            ),
+            ft.dropdown.Option("Mayor peso promedio"),
 
-
-            ft.dropdown.Option(
-                "Num. de lechones"
-            )
-
+            ft.dropdown.Option("Menor peso promedio")
 
         ]
 
+    )
+    
+    filtro = ft.Row(
+        spacing=8,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            ft.Icon(
+                ft.Icons.FILTER_ALT,
+                color="#5B6375",
+                size=48
+            ),
+            dropdown_filtro
+        ]
     )
    
 
@@ -544,12 +553,8 @@ def destete_list(nuevo_destete, editar_destete):
 
             if (
 
+
                 texto in str(
-                    p.id_destete
-                )
-
-
-                or texto in str(
                     p.arete
                 ).lower()
 
@@ -557,11 +562,6 @@ def destete_list(nuevo_destete, editar_destete):
                 or texto in str(
                     p.fecha_d
                 ).lower()
-
-
-                or texto in str(
-                    p.numle
-                )
 
 
             ):
@@ -577,11 +577,75 @@ def destete_list(nuevo_destete, editar_destete):
 
         cargar_tarjetas()
         cargar_paginacion()
+        
+
+    def aplicar_filtro(e):
+
+        opcion = e.control.value
 
 
+        destetes_filtrados.clear()
+
+
+        if opcion == "Todos":
+
+            destetes_filtrados.extend(
+                todos_destetes
+            )
+
+
+        elif opcion == "Más lechones":
+
+            destetes_filtrados.extend(
+                sorted(
+                    todos_destetes,
+                    key=lambda x: x.numle,
+                    reverse=True
+                )
+            )
+
+
+        elif opcion == "Menos lechones":
+
+            destetes_filtrados.extend(
+                sorted(
+                    todos_destetes,
+                    key=lambda x: x.numle
+                )
+            )
+
+
+        elif opcion == "Mayor peso promedio":
+
+            destetes_filtrados.extend(
+                sorted(
+                    todos_destetes,
+                    key=lambda x: x.peso,
+                    reverse=True
+                )
+            )
+
+
+        elif opcion == "Menor peso promedio":
+
+            destetes_filtrados.extend(
+                sorted(
+                    todos_destetes,
+                    key=lambda x: x.peso
+                )
+            )
+
+
+        pagina_actual["valor"] = 1
+
+        cargar_tarjetas()
+        cargar_paginacion()
+
+        e.page.update()
 
 
     buscador.on_change = buscar
+    dropdown_filtro.on_select = aplicar_filtro
     
     cargar_tarjetas()
     cargar_paginacion()

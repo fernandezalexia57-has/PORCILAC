@@ -486,7 +486,10 @@ def parto_list(nuevo_parto, editar_parto):
 
     buscador = ft.TextField(
 
-        hint_text="Buscar parto(ID, Arete)",
+        hint_text="Buscar parto por (Núm. Arete, Fecha)",
+        hint_style=ft.TextStyle(
+                    color="#9E9E9E",
+                    ),
 
         width=370,
 
@@ -498,93 +501,112 @@ def parto_list(nuevo_parto, editar_parto):
 
 
 
-    filtro = ft.Dropdown(
-
-        width=150,
-
+    dropdown_filtro = ft.Dropdown(
+        width=235,
         value="Todos",
-
         options=[
-
-
-            ft.dropdown.Option(
-                "Todos"
-            ),
-
-
-            ft.dropdown.Option(
-                "Fecha de parto"
-            ),
-
-
-            ft.dropdown.Option(
-                "Num. de lechones"
-            )
-
-
+            ft.dropdown.Option("Todos"),
+            ft.dropdown.Option("Con lechones muertos"),
+            ft.dropdown.Option("Sin lechones muertos"),
+            ft.dropdown.Option("Más de 10 lechones"),
+            ft.dropdown.Option("10 lechones o menos")
         ]
-
     )
-
+    
+    filtro = ft.Row(
+        spacing=8,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            ft.Icon(
+                ft.Icons.FILTER_ALT,
+                color="#5B6375",
+                size=48
+            ),
+            dropdown_filtro
+        ]
+    )
 
 
     def buscar(e):
 
-
-        texto = (
-            buscador.value
-            .lower()
-        )
-
-
+        texto = buscador.value.lower().strip()
 
         partos_filtrados.clear()
 
-
-
         for p in todos_partos:
 
-
             if (
-
-                texto in str(
-                    p.id_parto
-                )
-
-
-                or texto in str(
-                    p.arete
-                ).lower()
-
-
-                or texto in str(
-                    p.fecha
-                ).lower()
-
-
-                or texto in str(
-                    p.num_le
-                )
-
+                texto in str(p.arete).lower()
+                or texto in str(p.fecha).lower()
             ):
-
 
                 partos_filtrados.append(p)
 
-
-
-
         pagina_actual["valor"] = 1
-
 
         cargar_tarjetas()
 
         cargar_paginacion()
 
+        e.page.update()
+
+
+    def aplicar_filtro(e):
+        print(dropdown_filtro.value)
+
+        opcion = dropdown_filtro.value
+
+        partos_filtrados.clear()
+
+        if opcion == "Todos":
+
+            partos_filtrados.extend(todos_partos)
+
+        elif opcion == "Con lechones muertos":
+
+            for p in todos_partos:
+
+                if p.lechones_m > 0:
+
+                    partos_filtrados.append(p)
+
+        elif opcion == "Sin lechones muertos":
+
+            for p in todos_partos:
+
+                if p.lechones_m == 0:
+
+                    partos_filtrados.append(p)
+
+        elif opcion == "Más de 10 lechones":
+
+            for p in todos_partos:
+
+                if p.num_le > 10:
+
+                    partos_filtrados.append(p)
+
+        elif opcion == "10 lechones o menos":
+
+            for p in todos_partos:
+
+                if p.num_le <= 10:
+
+                    partos_filtrados.append(p)
+
+        pagina_actual["valor"] = 1
+
+        cargar_tarjetas()
+
+        cargar_paginacion()
+
+        e.page.update()
+
 
 
     buscador.on_change = buscar
-
+    dropdown_filtro.on_select = aplicar_filtro
+   
 
 
     cargar_tarjetas()
