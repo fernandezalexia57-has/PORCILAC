@@ -1,10 +1,5 @@
 import flet as ft
 
-<<<<<<< Updated upstream
-=======
-from tkinter import dialog
-
->>>>>>> Stashed changes
 from dao.usuario_dao import UsuarioDAO
 from ui.usuarios_form import usuario_form
 from ui.usuarios_list import usuarios_list
@@ -29,6 +24,53 @@ def main_window(page: ft.Page):
     contenido = ft.Container(padding=30, expand=True)
 
     botones_menu = []
+
+    header = ft.Container(
+        height=120,
+        bgcolor="#FDF8EB",
+        padding=ft.Padding(20, 0, 20, 0),
+        border=ft.Border(bottom=ft.BorderSide(2, "#8B5A2B")),
+        content=ft.Row(
+        [
+            # Logo a la izquierda
+            ft.Image(src="logo.png", height=90, fit="contain"),
+            # Íconos de la derecha (Notificaciones + Admin)
+            ft.Row(
+                [
+                    ft.IconButton(
+                        icon=ft.Icons.NOTIFICATIONS,
+                        icon_color=ft.Colors.BLACK,
+                        tooltip="Notificaciones",
+                    ),
+                    ft.Row(
+                        [
+                            ft.Icon(
+                                ft.Icons.ACCOUNT_CIRCLE,
+                                size=30,
+                                color=ft.Colors.BLACK,
+                            ),
+                            ft.Text(
+                                "Admin",
+                                weight=ft.FontWeight.BOLD,
+                                color=ft.Colors.BLACK,
+                            ),
+                        ],
+                        spacing=5,
+                    ),
+                ],
+                spacing=15,
+            ),
+        ],
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+    ),
+)
+
+    footer = ft.Container(
+            height=40,
+            bgcolor="#FDF8EB",
+            border=ft.Border(top=ft.BorderSide(2, "#8B5A2B")),
+        )
+
 
     def seleccionar_boton(boton_activo):
         for btn in botones_menu:
@@ -117,27 +159,15 @@ def main_window(page: ft.Page):
         )
         page.update()
 
-<<<<<<< Updated upstream
-    #Reacciona al click del botón de cerdas en el menú lateral
     def mostrar_insertar_cerda(e=None):
-        contenido.content = cerda_form(
-        regresar_cerdas
-    )
-    page.update()
-
-    def mostrar_lista_cerdas(e=None):
-
-     contenido.content = cerda_list(
-=======
-    def mostrar_insertar_cerda(e=None):
-
+    
             dialog = ft.AlertDialog(
                 modal=True,
                 content=cerda_form(
                 lambda mensaje=None: cerrar_dialog_cerdas(dialog, mensaje)
                 )
             )       
-
+    
             page.overlay.append(dialog)
             dialog.open = True
             page.update()
@@ -145,7 +175,6 @@ def main_window(page: ft.Page):
     def mostrar_lista_cerdas(e=None):
 
         contenido.content = cerda_list(
->>>>>>> Stashed changes
         mostrar_insertar_cerda,
         editar_cerda,
         ver_detalles
@@ -153,7 +182,7 @@ def main_window(page: ft.Page):
     )
 
     page.update()
-    
+        
     def ver_detalles(cerda):
 
         contenido.content = cerda_detalles(
@@ -171,50 +200,6 @@ def main_window(page: ft.Page):
             ver_detalles
             )
     
-<<<<<<< Updated upstream
-=======
-    
->>>>>>> Stashed changes
-            if mensaje:
-                page.show_dialog(
-                ft.SnackBar(
-                    content=ft.Text(mensaje),
-                    bgcolor=ft.Colors.GREEN,
-                )
-            )
-    
-            page.update()
-
-    page.update()
-<<<<<<< Updated upstream
-
-    def editar_cerda(cerda):
-
-     contenido.content = cerda_form(
-        regresar_cerdas,
-        cerda
-    )
-
-    page.update()
-
-    #Reacciona al click del botón de reproduccion en el menú lateral
-    def mostrar_insertar_servicio(e=None):
-            contenido.content = servicio_form(regresar_servicios)
-            page.update()
-
-    def mostrar_lista_servicios(e=None):
-        if e: seleccionar_boton(e.control)
-        contenido.content = servicio_list(
-            mostrar_insertar_servicio,
-            editar_servicio
-        )
-        page.update()
-
-    def regresar_servicios(mensaje=None):
-            contenido.content = servicio_list(
-            mostrar_insertar_servicio,
-            editar_servicio
-            )
     
             if mensaje:
                 page.show_dialog(
@@ -223,43 +208,10 @@ def main_window(page: ft.Page):
                     bgcolor=ft.Colors.GREEN,
                 )
             )
+    
             page.update()
 
-    def editar_servicio(servicio):
-        contenido.content = servicio_form(
-        regresar_servicios,
-        servicio
-    )
-    page.update() 
-
-    #Reacciona al click del botón de partos en el menú lateral
-    def mostrar_insertar_parto(e=None):
-        contenido.content = parto_form(regresar_partos)
-        page.update()
-    
-    def mostrar_lista_partos(e=None):
-        contenido.content = parto_list(
-        mostrar_insertar_parto,
-        editar_parto
-    )
     page.update()
-            
-    def regresar_partos():
-        contenido.content = parto_list(
-        mostrar_insertar_parto,
-        editar_parto
-    )
-    page.update()
-
-    def editar_parto(parto):
-        contenido.content = parto_form(
-        regresar_partos,
-        parto
-        )   
-        page.update()
-            
-    def regresar_partos(mensaje=None):
-=======
     
     def cerrar_dialog_cerdas(dialog, mensaje=None):
 
@@ -313,16 +265,12 @@ def main_window(page: ft.Page):
             
     def regresar_partos(mensaje=None):
     
->>>>>>> Stashed changes
             contenido.content = parto_list(
             mostrar_insertar_parto,
             editar_parto
             )
     
-<<<<<<< Updated upstream
-=======
     
->>>>>>> Stashed changes
             if mensaje:
                 page.show_dialog(
                 ft.SnackBar(
@@ -330,25 +278,6 @@ def main_window(page: ft.Page):
                     bgcolor=ft.Colors.GREEN,
                 )
             )
-<<<<<<< Updated upstream
-            page.update()
-    
-    #Reacciona al click del botón de destete en el menú lateral
-    def mostrar_insertar_destete(e=None):
-        contenido.content = destete_form(
-         regresar_destetes
-    )
-    page.update()
-        
-    def mostrar_lista_destetes(e=None):
-         contenido.content = destete_list(
-            mostrar_insertar_destete,
-            editar_destete
-    )
-    page.update()
-                
-    def regresar_destetes(mensaje=None):
-=======
     
             page.update()
 
@@ -468,7 +397,6 @@ def main_window(page: ft.Page):
                 
     def regresar_destetes(mensaje=None):
     
->>>>>>> Stashed changes
             contenido.content = destete_list(
             mostrar_insertar_destete,
             editar_destete
@@ -481,16 +409,6 @@ def main_window(page: ft.Page):
                     bgcolor=ft.Colors.GREEN,
                 )
             )
-<<<<<<< Updated upstream
-            page.update()
-    
-    def editar_destete(destete):
-         contenido.content = destete_form(
-            regresar_destetes,
-            destete
-    )
-    page.update() 
-=======
     
             page.update()
             
@@ -515,9 +433,8 @@ def main_window(page: ft.Page):
         )
         page.overlay.append(dialog)
         dialog.open = True
-        page.update() 
->>>>>>> Stashed changes
-    
+        page.update()        
+
     #Reacciona al click del botón de reportes en el menú lateral
     def mostrar_reportes(e=None):
         contenido.content = reportes_form(mostrar_inicio)
@@ -531,11 +448,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-<<<<<<< Updated upstream
-        shape = ft.RoundedRectangleBorder(radius = 2),
-=======
     shape = ft.RoundedRectangleBorder(radius = 2),
->>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_insertar_cerda(e))
     )
@@ -546,11 +459,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-<<<<<<< Updated upstream
-        shape = ft.RoundedRectangleBorder(radius = 2),
-=======
     shape = ft.RoundedRectangleBorder(radius = 2),
->>>>>>> Stashed changes
     ),
     on_click = lambda e: (seleccionar_boton(e.control), mostrar_lista_usuarios(e))     
     )
@@ -561,11 +470,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-<<<<<<< Updated upstream
-        shape = ft.RoundedRectangleBorder(radius = 2),
-=======
     shape = ft.RoundedRectangleBorder(radius = 2),
->>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_cerdas(e))
     )
@@ -576,11 +481,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-<<<<<<< Updated upstream
-        shape = ft.RoundedRectangleBorder(radius = 2),
-=======
     shape = ft.RoundedRectangleBorder(radius = 2),
->>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_servicios(e))
     )
@@ -591,11 +492,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-<<<<<<< Updated upstream
-        shape = ft.RoundedRectangleBorder(radius = 2),
-=======
     shape = ft.RoundedRectangleBorder(radius = 2),
->>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_partos(e))
     )
@@ -606,11 +503,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-<<<<<<< Updated upstream
-        shape = ft.RoundedRectangleBorder(radius = 2),
-=======
     shape = ft.RoundedRectangleBorder(radius = 2),
->>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_lista_destetes(e))
     )
@@ -621,11 +514,7 @@ def main_window(page: ft.Page):
     width = 180,
     color = ft.Colors.BLACK,
     style = ft.ButtonStyle(
-<<<<<<< Updated upstream
-        shape = ft.RoundedRectangleBorder(radius = 2),
-=======
     shape = ft.RoundedRectangleBorder(radius = 2),
->>>>>>> Stashed changes
     ),
     on_click = lambda e:(seleccionar_boton(e.control), mostrar_reportes(e))
     )
@@ -646,68 +535,40 @@ def main_window(page: ft.Page):
         bgcolor = ft.Colors.PINK_300,
         padding = 20,
         content = ft.Column(
-            expand = True,
             controls = [
-<<<<<<< Updated upstream
-                ft.Image(
-                    src="logo.png",
-                    width=240,
-                    height=180,
-                    fit="contain"
-                ),
-                ft.Container(height=15),
-                ft.Column(
-                    spacing=45,
-=======
                 ft.Column(
                     controls = [
-                        ft.Text(
-                            "Biblioteca",  
-                            size = 22,
-                            weight = ft.FontWeight.BOLD,
-                            color = ft.Colors.WHITE
-                        ),
-                        ft.Text(
-                            "Sistema de gestión",
-                            size = 12,
-                            color = ft.Colors.WHITE
-                        ),
-                        ft.Divider(color = ft.Colors.PINK_700),
                     ]
                 ),
                 ft.Column(
                     spacing=65,
->>>>>>> Stashed changes
-                    controls=botones_menu
                 ),
                 ft.Column(
-                    spacing = 65,
+                    spacing = 50,
                     horizontal_alignment = ft.CrossAxisAlignment.CENTER,
                     controls = [ 
                     ]
                 ),  
-<<<<<<< Updated upstream
-                ft.Container(expand=True),
-                
-=======
-                ft.Container(expand=True)
->>>>>>> Stashed changes
-            ]
-        )
-
+                ft.Column(spacing=30,
+                    controls=botones_menu,
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY,  # Distribuye el espacio entre los botones
+                    horizontal_alignment=ft.CrossAxisAlignment.STRETCH,  # Hace que todos tengan el mismo ancho
+                    expand=True),
+            ],
+        ),
      )
     
-    layout = ft.Row(
-            controls=[
-                menu_lateral, 
-                contenido
-            ],
-            expand=True,
-            spacing=0
+        # Layout general de la pantalla (Header arriba, luego Layout principal de contenido y Footer abajo)
+    layout_principal = ft.Row(
+        controls=[menu_lateral, contenido], expand=True, spacing=0
     )
 
-    page.add(layout)
-    
-    seleccionar_boton(btn_inicio)
+    layout = ft.Column(
+        controls=[header, layout_principal, footer], expand=True, spacing=0
+    )
 
+    page.clean()
+    page.add(layout)
+
+    seleccionar_boton(btn_inicio)
     mostrar_inicio()
