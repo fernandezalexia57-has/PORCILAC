@@ -74,8 +74,8 @@ class CerdaDAO:
         conexion.close()
 
         return existe
-
-
+        
+        
     def actualizar(self, cerda):
      conexion = Conexion.obtener_conexion()
      cursor = conexion.cursor()
@@ -137,7 +137,7 @@ class CerdaDAO:
         if resultado is None:
             return 0
         return resultado[0]
-
+    
     def actualizar_estado(self, id_cerda, estado):
 
      conexion = Conexion.obtener_conexion()
@@ -161,7 +161,7 @@ class CerdaDAO:
 
      cursor.close()
      conexion.close()
-
+     
     def obtener_estado(self, id_cerda):
 
      conexion = Conexion.obtener_conexion()
@@ -181,7 +181,7 @@ class CerdaDAO:
         return resultado[0]
 
      return None
-
+ 
     def obtener_por_id(self, cerda_id):
 
      conexion = Conexion.obtener_conexion()
@@ -208,7 +208,6 @@ class CerdaDAO:
             fecha=resultado[6]
         )
 
-     return None
      return None
  
     def dar_baja(self, id):

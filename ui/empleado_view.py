@@ -25,6 +25,53 @@ def empleado_view(page: ft.Page):
 
     botones_menu = []
 
+    header = ft.Container(
+        height=120,
+        bgcolor="#FDF8EB",
+        padding=ft.Padding(20, 0, 20, 0),
+        border=ft.Border(bottom=ft.BorderSide(2, "#8B5A2B")),
+        content=ft.Row(
+        [
+            # Logo a la izquierda
+            ft.Image(src="logo.png", height=90, fit="contain"),
+            # Íconos de la derecha (Notificaciones + Empleados)
+            ft.Row(
+                [
+                    ft.IconButton(
+                        icon=ft.Icons.NOTIFICATIONS,
+                        icon_color=ft.Colors.BLACK,
+                        tooltip="Notificaciones",
+                    ),
+                    ft.Row(
+                        [
+                            ft.Icon(
+                                ft.Icons.ACCOUNT_CIRCLE,
+                                size=30,
+                                color=ft.Colors.BLACK,
+                            ),
+                            ft.Text(
+                                "Empleado",
+                                weight=ft.FontWeight.BOLD,
+                                color=ft.Colors.BLACK,
+                            ),
+                        ],
+                        spacing=5,
+                    ),
+                ],
+                spacing=15,
+            ),
+        ],
+        alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+    ),
+)
+
+    footer = ft.Container(
+            height=40,
+            bgcolor="#FDF8EB",
+            border=ft.Border(top=ft.BorderSide(2, "#8B5A2B")),
+        )
+
+
     def seleccionar_boton(boton_activo):
         for btn in botones_menu:
             if btn == boton_activo:
@@ -75,6 +122,41 @@ def empleado_view(page: ft.Page):
 
     def mostrar_inicio(e=None):
         contenido.content = inicio()
+        page.update()
+            
+    #Reacciona al click del botón de usuarios en el menú lateral
+    def mostrar_insertar_usuario(e=None):
+        contenido.content = usuario_form(
+            regresar=mostrar_lista_usuarios
+        )
+        page.update()
+
+    def editar_usuario(usuario_seleccionado):
+        print("¡Se hizo clic en editar!", usuario_seleccionado.nombre)
+        # Llamamos al formulario PASANDO el usuario que vino de la fila
+        contenido.content = usuario_form(
+            regresar=mostrar_lista_usuarios,
+            usuario=usuario_seleccionado
+        )
+        page.update()
+
+
+    def eliminar_usuario(usuario_id):
+        try:
+            usuario_dao = UsuarioDAO()
+            usuario_dao.eliminar(usuario_id)
+            print(f"Usuario {usuario_id} eliminado exitosamente.")
+            
+            mostrar_lista_usuarios()
+        except Exception as e:
+            print(f"Error al eliminar usuario: {e}")
+
+    def mostrar_lista_usuarios(e=None):
+        contenido.content = usuarios_list(
+            nuevo_usuario=mostrar_insertar_usuario,
+            editar_usuario=editar_usuario,
+            eliminar_usuario=eliminar_usuario,
+        )
         page.update()
 
     #Reacciona al click del botón de cerdas en el menú lateral
@@ -336,47 +418,37 @@ def empleado_view(page: ft.Page):
             controls = [
                 ft.Column(
                     controls = [
-                        ft.Text(
-                            "Biblioteca",  
-                            size = 22,
-                            weight = ft.FontWeight.BOLD,
-                            color = ft.Colors.WHITE
-                        ),
-                        ft.Text(
-                            "Sistema de gestión",
-                            size = 12,
-                            color = ft.Colors.WHITE
-                        ),
-                        ft.Divider(color = ft.Colors.PINK_700),
                     ]
                 ),
                 ft.Column(
                     spacing=65,
-                    controls=botones_menu
                 ),
                 ft.Column(
-                    spacing = 65,
+                    spacing = 50,
                     horizontal_alignment = ft.CrossAxisAlignment.CENTER,
                     controls = [ 
                     ]
                 ),  
-                ft.Container(expand=True)
-            ]
-        )
-
+                ft.Column(spacing=30,
+                    controls=botones_menu,
+                    alignment=ft.MainAxisAlignment.SPACE_EVENLY,  # Distribuye el espacio entre los botones
+                    horizontal_alignment=ft.CrossAxisAlignment.STRETCH,  # Hace que todos tengan el mismo ancho
+                    expand=True),
+            ],
+        ),
      )
     
-    layout = ft.Row(
-            controls=[
-                menu_lateral, 
-                contenido
-            ],
-            expand=True,
-            spacing=0
+        # Layout general de la pantalla (Header arriba, luego Layout principal de contenido y Footer abajo)
+    layout_principal = ft.Row(
+        controls=[menu_lateral, contenido], expand=True, spacing=0
     )
 
-    page.add(layout)
-    
-    seleccionar_boton(btn_inicio)
+    layout = ft.Column(
+        controls=[header, layout_principal, footer], expand=True, spacing=0
+    )
 
+    page.clean()
+    page.add(layout)
+
+    seleccionar_boton(btn_inicio)
     mostrar_inicio()

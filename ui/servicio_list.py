@@ -476,8 +476,10 @@ def servicio_list(nuevo_servicio, editar_servicio):
     buscador = ft.TextField(
 
         hint_text=
-        "Buscar servicio(ID, Núm. Arete)",
-
+        "Buscar servicio por (Núm. Arete, Fecha)",
+        hint_style=ft.TextStyle(
+                    color="#9E9E9E",
+                    ),
         width=370,
         height= 48,
 
@@ -487,30 +489,35 @@ def servicio_list(nuevo_servicio, editar_servicio):
 
 
 
-    filtro = ft.Dropdown(
+    dropdown_filtro = ft.Dropdown(
 
-        width=150,
+        width=235,
 
         value="Todos",
 
         options=[
 
+            ft.dropdown.Option("Todos"),
 
-            ft.dropdown.Option(
-                "Todos"
-            ),
+            ft.dropdown.Option("Inseminación"),
 
-
-            ft.dropdown.Option(
-                "Fecha de servicio"
-            ),
-
-
-            
-
+            ft.dropdown.Option("Monta natural")
 
         ]
 
+    )
+    
+    filtro = ft.Row(
+        spacing=8,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            ft.Icon(
+                ft.Icons.FILTER_ALT,
+                color="#5B6375",
+                size=48
+            ),
+            dropdown_filtro
+        ]
     )
    
 
@@ -534,11 +541,6 @@ def servicio_list(nuevo_servicio, editar_servicio):
             if (
 
                 texto in str(
-                    p.id_servicio
-                )
-
-
-                or texto in str(
                     p.arete
                 ).lower()
 
@@ -546,9 +548,6 @@ def servicio_list(nuevo_servicio, editar_servicio):
                 or texto in str(
                     p.fecha_s
                 ).lower()
-
-
-               
 
 
             ):
@@ -566,9 +565,57 @@ def servicio_list(nuevo_servicio, editar_servicio):
         cargar_paginacion()
 
 
+    def aplicar_filtro(e):
 
+        opcion = e.control.value
+
+
+        servicios_filtrados.clear()
+
+
+
+        for s in todos_servicios:
+
+
+            if opcion == "Todos":
+
+                servicios_filtrados.append(s)
+
+
+
+            elif opcion == "Inseminación":
+
+
+                if s.tipo.lower() == "inseminación":
+
+                    servicios_filtrados.append(s)
+
+
+
+
+            elif opcion == "Monta natural":
+
+
+                if s.tipo.lower() == "monta natural":
+
+                    servicios_filtrados.append(s)
+
+
+
+
+        pagina_actual["valor"] = 1
+
+
+        cargar_tarjetas()
+
+        cargar_paginacion()
+
+        e.page.update()
+        
+        
 
     buscador.on_change = buscar
+    dropdown_filtro.on_select = aplicar_filtro
     
     cargar_tarjetas()
     cargar_paginacion()

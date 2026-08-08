@@ -1,3 +1,6 @@
+
+
+
 from tkinter import dialog
 
 import flet as ft
@@ -5,7 +8,7 @@ import flet as ft
 from dao.cerda_dao import CerdaDAO
 
 
-
+print("CERDA_LIST CARGADO")
 def cerda_list(nuevo_cerda, editar_cerda, ver_detalles):
 
 
@@ -247,7 +250,7 @@ def cerda_list(nuevo_cerda, editar_cerda, ver_detalles):
 
     run_spacing=35,        # separación vertical
 
-    child_aspect_ratio=1.60
+    child_aspect_ratio=1.41
 
 )
     contenedor_tarjetas = ft.Container(
@@ -642,99 +645,82 @@ def cerda_list(nuevo_cerda, editar_cerda, ver_detalles):
     buscador = ft.TextField(
 
         hint_text=
-        "Buscar cerda(ID, Núm. Arete)",
-
+        "Buscar cerda por (Núm. Arete, Fecha)",
+            hint_style=ft.TextStyle(
+                    color="#9E9E9E",
+                    ),
         width=370,
         height= 48,
 
         prefix_icon=ft.Icons.SEARCH
 
     )
+    
 
 
-
-    filtro = ft.Dropdown(
-
-        width=150,
-
-        value="Todos",
-
+    dropdown_filtro = ft.Dropdown(
+        width=235,
+        value="Todas",
         options=[
-
-
-            ft.dropdown.Option(
-                "Todos"
-            ),
-
-
-            ft.dropdown.Option(
-                "Fecha de registro"
-            ),
-
-
-            
-
-
+            ft.dropdown.Option("Todas"),
+            ft.dropdown.Option("Celo"),
+            ft.dropdown.Option("Gestante"),
+            ft.dropdown.Option("Lactante"),
+            ft.dropdown.Option("Vacía"),
+            ft.dropdown.Option("Baja"),
         ]
+    )
 
+
+    filtro = ft.Row(
+        spacing=8,
+        vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        controls=[
+            ft.Icon(
+                ft.Icons.FILTER_ALT,
+                color="#5B6375",
+                size=48
+            ),
+            dropdown_filtro
+        ]
     )
    
 
+    
+    def aplicar_filtros(e):
 
-    def buscar(e):
-
-
-        texto = (
-            buscador.value
-            .lower()
-        )
-
+        texto = buscador.value.lower().strip()
+        estado = dropdown_filtro.value
 
         cerdas_filtrados.clear()
 
+        for cerda in todos_cerdas:
 
+            coincide_busqueda = (
+                texto == ""
+                or texto in str(cerda.arete).lower()
+                or texto in str(cerda.fecha).lower()
+            )
 
-        for p in todos_cerdas:
+            coincide_estado = (
+                estado == "Todas"
+                or cerda.estado.strip().lower() == estado.strip().lower()
+            )
 
-
-            if (
-
-                texto in str(
-                    p.id
-                )
-
-
-                or texto in str(
-                    p.arete
-                ).lower()
-
-
-                or texto in str(
-                    p.fecha
-                ).lower()
-
-
-               
-
-
-            ):
-
-
-                cerdas_filtrados.append(p)
-
-
-
+            if coincide_busqueda and coincide_estado:
+                cerdas_filtrados.append(cerda)
 
         pagina_actual["valor"] = 1
-
-
         cargar_tarjetas()
         cargar_paginacion()
+        e.page.update()
+
+    buscador.on_change = aplicar_filtros
+    dropdown_filtro.on_select = aplicar_filtros
+    
+    
 
 
-
-
-    buscador.on_change = buscar
     
     cargar_tarjetas()
     cargar_paginacion()
